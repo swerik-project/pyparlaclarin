@@ -1,5 +1,5 @@
 """
-Parla Clarin generation
+Generate new Parla Clarin documents
 """
 import pandas as pd
 import copy

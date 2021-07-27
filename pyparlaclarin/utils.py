@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Provides useful utilities for the other modules as well as for general use.
+Read and extract information from Parla-Clarin documents.
 """
 
 import lxml

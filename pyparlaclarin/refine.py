@@ -1,3 +1,6 @@
+"""
+Modify and curate Parla-Clarin documents
+"""
 from lxml import etree
 from pyparlaclarin.utils import element_hash
 import re, random, datetime
