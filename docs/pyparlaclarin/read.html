@@ -134,39 +134,56 @@ def validate_xml_schema(xml_path, schema_path):
     return is_valid
 
 
-def parlaclarin_to_md(tree):
+def parlaclarin_to_md(root):
     &#34;&#34;&#34;
     Convert Parla-Clarin XML to markdown. Returns a string.
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root.
     &#34;&#34;&#34;
     return None
 
-def parlaclarin_to_txt(tree):
+def parlaclarin_to_txt(root):
     &#34;&#34;&#34;
     Convert Parla-Clarin XML to plain text. Returns a string.
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root. 
     &#34;&#34;&#34;
-    paragraphs = paragraph_iterator(tree)
+    paragraphs = paragraph_iterator(root)
     return &#34;\n\n&#34;.join(paragraphs)
 
-def speeches_with_name(tree, name=None):
+def speeches_with_name(root, name=None):
     &#34;&#34;&#34;
-    Convert Parla-Clarin XML to plain text. Returns a string. If name is None, returns all speeches.
+    Convert Parla-Clarin XML to plain text. Returns a concatenated string.
+    
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root. 
+        name: Name of the person whose speeches are returned. If name is None, returns all speeches.
     &#34;&#34;&#34;
-    us = tree.findall(&#39;.//{http://www.tei-c.org/ns/1.0}u&#39;)
+    us = root.findall(&#39;.//{http://www.tei-c.org/ns/1.0}u&#39;)
     for u in us:
         if name is None:
             yield &#34;\n&#34;.join(u.itertext())
         elif name.lower() in u.attrib[&#39;who&#39;].lower():
             yield &#34;\n&#34;.join(u.itertext())
 
-def paragraph_iterator(root):
+def paragraph_iterator(root, output=&#34;str&#34;):
     &#34;&#34;&#34;
-    Convert Parla-Clarin XML to an iterator of paragraphs. Returns an iterator of str&#39;s.
+    Convert Parla-Clarin XML to an iterator of paragraphs. 
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root.
+        output: Output format of paragraphs. Accepts &#34;str&#34; (default), or &#34;lxml&#34;.
     &#34;&#34;&#34;
     for body in root.findall(&#34;.//{http://www.tei-c.org/ns/1.0}body&#34;):
         for div in body.findall(&#34;{http://www.tei-c.org/ns/1.0}div&#34;):
             for elem in div:
-                p = &#34;\n&#34;.join(elem.itertext())
-                yield p
+                if output == &#34;str&#34;:
+                    p = &#34;\n&#34;.join(elem.itertext())
+                    yield p
+                elif output == &#34;lxml&#34;:
+                    yield elem
 
 
 if __name__ == &#39;__main__&#39;:
@@ -257,55 +274,85 @@ if __name__ == &#39;__main__&#39;:
 </details>
 </dd>
 <dt id="pyparlaclarin.read.paragraph_iterator"><code class="name flex">
-<span>def <span class="ident">paragraph_iterator</span></span>(<span>root)</span>
+<span>def <span class="ident">paragraph_iterator</span></span>(<span>root, output='str')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Convert Parla-Clarin XML to an iterator of paragraphs. Returns an iterator of str's.</p></div>
+<div class="desc"><p>Convert Parla-Clarin XML to an iterator of paragraphs. </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>root</code></strong></dt>
+<dd>Parla-Clarin document root, as an lxml tree root.</dd>
+<dt><strong><code>output</code></strong></dt>
+<dd>Output format of paragraphs. Accepts "str" (default), or "lxml".</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def paragraph_iterator(root):
+<pre><code class="python">def paragraph_iterator(root, output=&#34;str&#34;):
     &#34;&#34;&#34;
-    Convert Parla-Clarin XML to an iterator of paragraphs. Returns an iterator of str&#39;s.
+    Convert Parla-Clarin XML to an iterator of paragraphs. 
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root.
+        output: Output format of paragraphs. Accepts &#34;str&#34; (default), or &#34;lxml&#34;.
     &#34;&#34;&#34;
     for body in root.findall(&#34;.//{http://www.tei-c.org/ns/1.0}body&#34;):
         for div in body.findall(&#34;{http://www.tei-c.org/ns/1.0}div&#34;):
             for elem in div:
-                p = &#34;\n&#34;.join(elem.itertext())
-                yield p</code></pre>
+                if output == &#34;str&#34;:
+                    p = &#34;\n&#34;.join(elem.itertext())
+                    yield p
+                elif output == &#34;lxml&#34;:
+                    yield elem</code></pre>
 </details>
 </dd>
 <dt id="pyparlaclarin.read.parlaclarin_to_md"><code class="name flex">
-<span>def <span class="ident">parlaclarin_to_md</span></span>(<span>tree)</span>
+<span>def <span class="ident">parlaclarin_to_md</span></span>(<span>root)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Convert Parla-Clarin XML to markdown. Returns a string.</p></div>
+<div class="desc"><p>Convert Parla-Clarin XML to markdown. Returns a string.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>root</code></strong></dt>
+<dd>Parla-Clarin document root, as an lxml tree root.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def parlaclarin_to_md(tree):
+<pre><code class="python">def parlaclarin_to_md(root):
     &#34;&#34;&#34;
     Convert Parla-Clarin XML to markdown. Returns a string.
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root.
     &#34;&#34;&#34;
     return None</code></pre>
 </details>
 </dd>
 <dt id="pyparlaclarin.read.parlaclarin_to_txt"><code class="name flex">
-<span>def <span class="ident">parlaclarin_to_txt</span></span>(<span>tree)</span>
+<span>def <span class="ident">parlaclarin_to_txt</span></span>(<span>root)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Convert Parla-Clarin XML to plain text. Returns a string.</p></div>
+<div class="desc"><p>Convert Parla-Clarin XML to plain text. Returns a string.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>root</code></strong></dt>
+<dd>Parla-Clarin document root, as an lxml tree root.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def parlaclarin_to_txt(tree):
+<pre><code class="python">def parlaclarin_to_txt(root):
     &#34;&#34;&#34;
     Convert Parla-Clarin XML to plain text. Returns a string.
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root. 
     &#34;&#34;&#34;
-    paragraphs = paragraph_iterator(tree)
+    paragraphs = paragraph_iterator(root)
     return &#34;\n\n&#34;.join(paragraphs)</code></pre>
 </details>
 </dd>
@@ -352,19 +399,30 @@ inside the text element</p></div>
 </details>
 </dd>
 <dt id="pyparlaclarin.read.speeches_with_name"><code class="name flex">
-<span>def <span class="ident">speeches_with_name</span></span>(<span>tree, name=None)</span>
+<span>def <span class="ident">speeches_with_name</span></span>(<span>root, name=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Convert Parla-Clarin XML to plain text. Returns a string. If name is None, returns all speeches.</p></div>
+<div class="desc"><p>Convert Parla-Clarin XML to plain text. Returns a concatenated string.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>root</code></strong></dt>
+<dd>Parla-Clarin document root, as an lxml tree root. </dd>
+<dt><strong><code>name</code></strong></dt>
+<dd>Name of the person whose speeches are returned. If name is None, returns all speeches.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def speeches_with_name(tree, name=None):
+<pre><code class="python">def speeches_with_name(root, name=None):
     &#34;&#34;&#34;
-    Convert Parla-Clarin XML to plain text. Returns a string. If name is None, returns all speeches.
+    Convert Parla-Clarin XML to plain text. Returns a concatenated string.
+    
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root. 
+        name: Name of the person whose speeches are returned. If name is None, returns all speeches.
     &#34;&#34;&#34;
-    us = tree.findall(&#39;.//{http://www.tei-c.org/ns/1.0}u&#39;)
+    us = root.findall(&#39;.//{http://www.tei-c.org/ns/1.0}u&#39;)
     for u in us:
         if name is None:
             yield &#34;\n&#34;.join(u.itertext())

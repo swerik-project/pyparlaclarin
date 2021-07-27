@@ -104,39 +104,56 @@ def validate_xml_schema(xml_path, schema_path):
     return is_valid
 
 
-def parlaclarin_to_md(tree):
+def parlaclarin_to_md(root):
     """
     Convert Parla-Clarin XML to markdown. Returns a string.
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root.
     """
     return None
 
-def parlaclarin_to_txt(tree):
+def parlaclarin_to_txt(root):
     """
     Convert Parla-Clarin XML to plain text. Returns a string.
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root. 
     """
-    paragraphs = paragraph_iterator(tree)
+    paragraphs = paragraph_iterator(root)
     return "\n\n".join(paragraphs)
 
-def speeches_with_name(tree, name=None):
+def speeches_with_name(root, name=None):
     """
-    Convert Parla-Clarin XML to plain text. Returns a string. If name is None, returns all speeches.
+    Convert Parla-Clarin XML to plain text. Returns a concatenated string.
+    
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root. 
+        name: Name of the person whose speeches are returned. If name is None, returns all speeches.
     """
-    us = tree.findall('.//{http://www.tei-c.org/ns/1.0}u')
+    us = root.findall('.//{http://www.tei-c.org/ns/1.0}u')
     for u in us:
         if name is None:
             yield "\n".join(u.itertext())
         elif name.lower() in u.attrib['who'].lower():
             yield "\n".join(u.itertext())
 
-def paragraph_iterator(root):
+def paragraph_iterator(root, output="str"):
     """
-    Convert Parla-Clarin XML to an iterator of paragraphs. Returns an iterator of str's.
+    Convert Parla-Clarin XML to an iterator of paragraphs. 
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root.
+        output: Output format of paragraphs. Accepts "str" (default), or "lxml".
     """
     for body in root.findall(".//{http://www.tei-c.org/ns/1.0}body"):
         for div in body.findall("{http://www.tei-c.org/ns/1.0}div"):
             for elem in div:
-                p = "\n".join(elem.itertext())
-                yield p
+                if output == "str":
+                    p = "\n".join(elem.itertext())
+                    yield p
+                elif output == "lxml":
+                    yield elem
 
 
 if __name__ == '__main__':
