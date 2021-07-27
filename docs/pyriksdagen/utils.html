@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>pyriksdagen.utils API documentation</title>
+<meta name="description" content="Provides useful utilities for the other modules as well as for general use." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pyriksdagen.utils</code></h1>
+</header>
+<section id="section-intro">
+<p>Provides useful utilities for the other modules as well as for general use.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+&#34;&#34;&#34;
+Provides useful utilities for the other modules as well as for general use.
+&#34;&#34;&#34;
+
+import lxml
+from lxml import etree
+import xml.etree.ElementTree as et
+import sys, re, os
+from bs4 import BeautifulSoup
+import pandas as pd
+import hashlib
+
+def infer_metadata(filename):
+    metadata = dict()
+    filename = filename.replace(&#34;-&#34;, &#34;_&#34;)
+    metadata[&#34;protocol&#34;] = filename.split(&#34;/&#34;)[-1].split(&#34;.&#34;)[0]
+    split = filename.split(&#34;/&#34;)[-1].split(&#34;_&#34;)
+    
+    # Year
+    for s in split:
+        s = s[:4]
+        if s.isdigit():
+            year = int(s)
+            if year &gt; 1800 and year &lt; 2100:
+                metadata[&#34;year&#34;] = year
+
+    # Chamber
+    metadata[&#34;chamber&#34;] = &#34;Enkammarriksdagen&#34;
+    if &#34;_ak_&#34; in filename:
+        metadata[&#34;chamber&#34;] = &#34;Andra kammaren&#34;
+    elif &#34;_fk_&#34; in filename:
+        metadata[&#34;chamber&#34;] = &#34;Första kammaren&#34;
+    
+    try:
+        metadata[&#34;number&#34;] = int(split[-1])
+    except:
+        print(&#34;Number parsing unsuccesful&#34;, filename)
+        
+    return metadata
+
+def element_hash(elem, protocol_id=&#34;&#34;, chars=16):
+    &#34;&#34;&#34;
+    Calculate a deterministic hash for an XML element
+    &#34;&#34;&#34;
+    # The hash seed consists of 
+    # 1. Element text without line breaks
+    elem_text = elem.text
+    if elem_text is None:
+        elem_text = &#34;&#34;
+    elem_text = elem_text.strip().replace(&#34;\n&#34;, &#34; &#34;)
+    elem_text = &#39; &#39;.join(elem_text.split())
+    # 2. The element tag
+    elem_tag = elem.tag
+    # 3. The element attributes in alphabetical order,
+    # excluding the XML ID and XML n
+    xml_id = &#34;{http://www.w3.org/XML/1998/namespace}id&#34;
+    xml_n = &#34;{http://www.w3.org/XML/1998/namespace}n&#34;
+    n = &#34;n&#34;
+    excluded = [xml_id, xml_n, n, &#34;prev&#34;, &#34;next&#34;]
+    elem_attrib = {key: value for key, value in elem.attrib.items() if key not in excluded}
+    elem_attrib = str(sorted(elem_attrib.items()))
+    seed = protocol_id + &#34;\n&#34; + elem_text + &#34;\n&#34; + elem_tag + &#34;\n&#34; + elem_attrib
+    encoded_seed = seed.encode(&#34;utf-8&#34;)
+    # Finally, the hash is calculated via MD5
+    digest = hashlib.md5(encoded_seed).hexdigest()
+    return digest[:chars]
+
+def _clean_html(raw_html):
+    # Clean the HTML code in the Riksdagen XML text format
+    raw_html = raw_html.replace(&#34;\n&#34;, &#34; NEWLINE &#34;)
+    cleanr = re.compile(&#39;&lt;.*?&gt;&#39;)
+    cleantext = re.sub(cleanr, &#39;&#39;, raw_html)
+    cleantext = cleantext.replace(&#34; NEWLINE &#34;, &#34;\n&#34;)
+    return cleantext
+
+def read_riksdagen_xml(path):
+    &#34;&#34;&#34;
+    Read Riksdagen XML text format and return a tuple
+    consisting of an etree of , as well as the HTML
+    inside the text element
+    &#34;&#34;&#34;
+    # TODO: implement
+
+    xml, cleaned_html
+
+def read_html(path):
+    &#34;&#34;&#34;
+    Read a HTML file and turn it into valid XML
+    &#34;&#34;&#34;
+    f = open(path)
+    soup = BeautifulSoup(f)
+    f.close()
+    pretty_html = soup.prettify()
+    return etree.fromstring(pretty_html)
+    
+def validate_xml_schema(xml_path, schema_path):
+    xml_file = lxml.etree.parse(xml_path)
+
+    schema = lxml.etree.XMLSchema(file=schema_path)
+    is_valid = schema.validate(xml_file)
+
+    return is_valid
+
+
+def parlaclarin_to_md(tree):
+    &#34;&#34;&#34;
+    Convert Parla-Clarin XML to markdown. Returns a string.
+    &#34;&#34;&#34;
+    return None
+
+def parlaclarin_to_txt(tree):
+    &#34;&#34;&#34;
+    Convert Parla-Clarin XML to plain text. Returns a string.
+    &#34;&#34;&#34;
+    paragraphs = paragraph_iterator(tree)
+    return &#34;\n\n&#34;.join(paragraphs)
+
+def speeches_with_name(tree, name=None):
+    &#34;&#34;&#34;
+    Convert Parla-Clarin XML to plain text. Returns a string. If name is None, returns all speeches.
+    &#34;&#34;&#34;
+    us = tree.findall(&#39;.//{http://www.tei-c.org/ns/1.0}u&#39;)
+    for u in us:
+        if name is None:
+            yield &#34;\n&#34;.join(u.itertext())
+        elif name.lower() in u.attrib[&#39;who&#39;].lower():
+            yield &#34;\n&#34;.join(u.itertext())
+
+def paragraph_iterator(root):
+    &#34;&#34;&#34;
+    Convert Parla-Clarin XML to an iterator of paragraphs. Returns an iterator of str&#39;s.
+    &#34;&#34;&#34;
+    for body in root.findall(&#34;.//{http://www.tei-c.org/ns/1.0}body&#34;):
+        for div in body.findall(&#34;{http://www.tei-c.org/ns/1.0}div&#34;):
+            for elem in div:
+                p = &#34;\n&#34;.join(elem.itertext())
+                yield p
+
+
+if __name__ == &#39;__main__&#39;:
+    validate_parla_clarin_example()
+    #update_test()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="pyriksdagen.utils.element_hash"><code class="name flex">
+<span>def <span class="ident">element_hash</span></span>(<span>elem, protocol_id='', chars=16)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculate a deterministic hash for an XML element</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def element_hash(elem, protocol_id=&#34;&#34;, chars=16):
+    &#34;&#34;&#34;
+    Calculate a deterministic hash for an XML element
+    &#34;&#34;&#34;
+    # The hash seed consists of 
+    # 1. Element text without line breaks
+    elem_text = elem.text
+    if elem_text is None:
+        elem_text = &#34;&#34;
+    elem_text = elem_text.strip().replace(&#34;\n&#34;, &#34; &#34;)
+    elem_text = &#39; &#39;.join(elem_text.split())
+    # 2. The element tag
+    elem_tag = elem.tag
+    # 3. The element attributes in alphabetical order,
+    # excluding the XML ID and XML n
+    xml_id = &#34;{http://www.w3.org/XML/1998/namespace}id&#34;
+    xml_n = &#34;{http://www.w3.org/XML/1998/namespace}n&#34;
+    n = &#34;n&#34;
+    excluded = [xml_id, xml_n, n, &#34;prev&#34;, &#34;next&#34;]
+    elem_attrib = {key: value for key, value in elem.attrib.items() if key not in excluded}
+    elem_attrib = str(sorted(elem_attrib.items()))
+    seed = protocol_id + &#34;\n&#34; + elem_text + &#34;\n&#34; + elem_tag + &#34;\n&#34; + elem_attrib
+    encoded_seed = seed.encode(&#34;utf-8&#34;)
+    # Finally, the hash is calculated via MD5
+    digest = hashlib.md5(encoded_seed).hexdigest()
+    return digest[:chars]</code></pre>
+</details>
+</dd>
+<dt id="pyriksdagen.utils.infer_metadata"><code class="name flex">
+<span>def <span class="ident">infer_metadata</span></span>(<span>filename)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def infer_metadata(filename):
+    metadata = dict()
+    filename = filename.replace(&#34;-&#34;, &#34;_&#34;)
+    metadata[&#34;protocol&#34;] = filename.split(&#34;/&#34;)[-1].split(&#34;.&#34;)[0]
+    split = filename.split(&#34;/&#34;)[-1].split(&#34;_&#34;)
+    
+    # Year
+    for s in split:
+        s = s[:4]
+        if s.isdigit():
+            year = int(s)
+            if year &gt; 1800 and year &lt; 2100:
+                metadata[&#34;year&#34;] = year
+
+    # Chamber
+    metadata[&#34;chamber&#34;] = &#34;Enkammarriksdagen&#34;
+    if &#34;_ak_&#34; in filename:
+        metadata[&#34;chamber&#34;] = &#34;Andra kammaren&#34;
+    elif &#34;_fk_&#34; in filename:
+        metadata[&#34;chamber&#34;] = &#34;Första kammaren&#34;
+    
+    try:
+        metadata[&#34;number&#34;] = int(split[-1])
+    except:
+        print(&#34;Number parsing unsuccesful&#34;, filename)
+        
+    return metadata</code></pre>
+</details>
+</dd>
+<dt id="pyriksdagen.utils.paragraph_iterator"><code class="name flex">
+<span>def <span class="ident">paragraph_iterator</span></span>(<span>root)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Convert Parla-Clarin XML to an iterator of paragraphs. Returns an iterator of str's.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def paragraph_iterator(root):
+    &#34;&#34;&#34;
+    Convert Parla-Clarin XML to an iterator of paragraphs. Returns an iterator of str&#39;s.
+    &#34;&#34;&#34;
+    for body in root.findall(&#34;.//{http://www.tei-c.org/ns/1.0}body&#34;):
+        for div in body.findall(&#34;{http://www.tei-c.org/ns/1.0}div&#34;):
+            for elem in div:
+                p = &#34;\n&#34;.join(elem.itertext())
+                yield p</code></pre>
+</details>
+</dd>
+<dt id="pyriksdagen.utils.parlaclarin_to_md"><code class="name flex">
+<span>def <span class="ident">parlaclarin_to_md</span></span>(<span>tree)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Convert Parla-Clarin XML to markdown. Returns a string.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parlaclarin_to_md(tree):
+    &#34;&#34;&#34;
+    Convert Parla-Clarin XML to markdown. Returns a string.
+    &#34;&#34;&#34;
+    return None</code></pre>
+</details>
+</dd>
+<dt id="pyriksdagen.utils.parlaclarin_to_txt"><code class="name flex">
+<span>def <span class="ident">parlaclarin_to_txt</span></span>(<span>tree)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Convert Parla-Clarin XML to plain text. Returns a string.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parlaclarin_to_txt(tree):
+    &#34;&#34;&#34;
+    Convert Parla-Clarin XML to plain text. Returns a string.
+    &#34;&#34;&#34;
+    paragraphs = paragraph_iterator(tree)
+    return &#34;\n\n&#34;.join(paragraphs)</code></pre>
+</details>
+</dd>
+<dt id="pyriksdagen.utils.read_html"><code class="name flex">
+<span>def <span class="ident">read_html</span></span>(<span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read a HTML file and turn it into valid XML</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_html(path):
+    &#34;&#34;&#34;
+    Read a HTML file and turn it into valid XML
+    &#34;&#34;&#34;
+    f = open(path)
+    soup = BeautifulSoup(f)
+    f.close()
+    pretty_html = soup.prettify()
+    return etree.fromstring(pretty_html)</code></pre>
+</details>
+</dd>
+<dt id="pyriksdagen.utils.read_riksdagen_xml"><code class="name flex">
+<span>def <span class="ident">read_riksdagen_xml</span></span>(<span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read Riksdagen XML text format and return a tuple
+consisting of an etree of , as well as the HTML
+inside the text element</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_riksdagen_xml(path):
+    &#34;&#34;&#34;
+    Read Riksdagen XML text format and return a tuple
+    consisting of an etree of , as well as the HTML
+    inside the text element
+    &#34;&#34;&#34;
+    # TODO: implement
+
+    xml, cleaned_html</code></pre>
+</details>
+</dd>
+<dt id="pyriksdagen.utils.speeches_with_name"><code class="name flex">
+<span>def <span class="ident">speeches_with_name</span></span>(<span>tree, name=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Convert Parla-Clarin XML to plain text. Returns a string. If name is None, returns all speeches.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def speeches_with_name(tree, name=None):
+    &#34;&#34;&#34;
+    Convert Parla-Clarin XML to plain text. Returns a string. If name is None, returns all speeches.
+    &#34;&#34;&#34;
+    us = tree.findall(&#39;.//{http://www.tei-c.org/ns/1.0}u&#39;)
+    for u in us:
+        if name is None:
+            yield &#34;\n&#34;.join(u.itertext())
+        elif name.lower() in u.attrib[&#39;who&#39;].lower():
+            yield &#34;\n&#34;.join(u.itertext())</code></pre>
+</details>
+</dd>
+<dt id="pyriksdagen.utils.validate_xml_schema"><code class="name flex">
+<span>def <span class="ident">validate_xml_schema</span></span>(<span>xml_path, schema_path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate_xml_schema(xml_path, schema_path):
+    xml_file = lxml.etree.parse(xml_path)
+
+    schema = lxml.etree.XMLSchema(file=schema_path)
+    is_valid = schema.validate(xml_file)
+
+    return is_valid</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pyriksdagen" href="index.html">pyriksdagen</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="pyriksdagen.utils.element_hash" href="#pyriksdagen.utils.element_hash">element_hash</a></code></li>
+<li><code><a title="pyriksdagen.utils.infer_metadata" href="#pyriksdagen.utils.infer_metadata">infer_metadata</a></code></li>
+<li><code><a title="pyriksdagen.utils.paragraph_iterator" href="#pyriksdagen.utils.paragraph_iterator">paragraph_iterator</a></code></li>
+<li><code><a title="pyriksdagen.utils.parlaclarin_to_md" href="#pyriksdagen.utils.parlaclarin_to_md">parlaclarin_to_md</a></code></li>
+<li><code><a title="pyriksdagen.utils.parlaclarin_to_txt" href="#pyriksdagen.utils.parlaclarin_to_txt">parlaclarin_to_txt</a></code></li>
+<li><code><a title="pyriksdagen.utils.read_html" href="#pyriksdagen.utils.read_html">read_html</a></code></li>
+<li><code><a title="pyriksdagen.utils.read_riksdagen_xml" href="#pyriksdagen.utils.read_riksdagen_xml">read_riksdagen_xml</a></code></li>
+<li><code><a title="pyriksdagen.utils.speeches_with_name" href="#pyriksdagen.utils.speeches_with_name">speeches_with_name</a></code></li>
+<li><code><a title="pyriksdagen.utils.validate_xml_schema" href="#pyriksdagen.utils.validate_xml_schema">validate_xml_schema</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
