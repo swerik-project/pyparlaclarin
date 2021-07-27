@@ -4,7 +4,7 @@ Generate new Parla Clarin documents
 import pandas as pd
 import copy
 from lxml import etree
-from pyparlaclarin.utils import infer_metadata
+from pyparlaclarin.read import infer_metadata
 
 # Generate parla clarin header
 def pc_header(metadata):
