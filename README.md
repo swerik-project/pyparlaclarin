@@ -1,6 +1,6 @@
 # Pyparlaclarin
 
-This repo is for basic functionality that is useful in processing Parla-Clarin XML files in general.
+This module includes functionality for reading, creating, and modifying Parla-Clarin XML files.
 
 Install by running
 
