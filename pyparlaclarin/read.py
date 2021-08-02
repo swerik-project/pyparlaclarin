@@ -5,7 +5,6 @@ Read and extract information from Parla-Clarin documents.
 """
 
 from lxml import etree
-import xml.etree.ElementTree as et
 import hashlib
 
 def element_hash(elem, protocol_id="", chars=16):
