@@ -34,41 +34,8 @@
 Read and extract information from Parla-Clarin documents.
 &#34;&#34;&#34;
 
-import lxml
 from lxml import etree
-import xml.etree.ElementTree as et
-import sys, re, os
-from bs4 import BeautifulSoup
-import pandas as pd
 import hashlib
-
-def infer_metadata(filename):
-    metadata = dict()
-    filename = filename.replace(&#34;-&#34;, &#34;_&#34;)
-    metadata[&#34;protocol&#34;] = filename.split(&#34;/&#34;)[-1].split(&#34;.&#34;)[0]
-    split = filename.split(&#34;/&#34;)[-1].split(&#34;_&#34;)
-    
-    # Year
-    for s in split:
-        s = s[:4]
-        if s.isdigit():
-            year = int(s)
-            if year &gt; 1800 and year &lt; 2100:
-                metadata[&#34;year&#34;] = year
-
-    # Chamber
-    metadata[&#34;chamber&#34;] = &#34;Enkammarriksdagen&#34;
-    if &#34;_ak_&#34; in filename:
-        metadata[&#34;chamber&#34;] = &#34;Andra kammaren&#34;
-    elif &#34;_fk_&#34; in filename:
-        metadata[&#34;chamber&#34;] = &#34;Första kammaren&#34;
-    
-    try:
-        metadata[&#34;number&#34;] = int(split[-1])
-    except:
-        print(&#34;Number parsing unsuccesful&#34;, filename)
-        
-    return metadata
 
 def element_hash(elem, protocol_id=&#34;&#34;, chars=16):
     &#34;&#34;&#34;
@@ -96,39 +63,12 @@ def element_hash(elem, protocol_id=&#34;&#34;, chars=16):
     # Finally, the hash is calculated via MD5
     digest = hashlib.md5(encoded_seed).hexdigest()
     return digest[:chars]
-
-def _clean_html(raw_html):
-    # Clean the HTML code in the Riksdagen XML text format
-    raw_html = raw_html.replace(&#34;\n&#34;, &#34; NEWLINE &#34;)
-    cleanr = re.compile(&#39;&lt;.*?&gt;&#39;)
-    cleantext = re.sub(cleanr, &#39;&#39;, raw_html)
-    cleantext = cleantext.replace(&#34; NEWLINE &#34;, &#34;\n&#34;)
-    return cleantext
-
-def read_riksdagen_xml(path):
-    &#34;&#34;&#34;
-    Read Riksdagen XML text format and return a tuple
-    consisting of an etree of , as well as the HTML
-    inside the text element
-    &#34;&#34;&#34;
-    # TODO: implement
-
-    xml, cleaned_html
-
-def read_html(path):
-    &#34;&#34;&#34;
-    Read a HTML file and turn it into valid XML
-    &#34;&#34;&#34;
-    f = open(path)
-    soup = BeautifulSoup(f)
-    f.close()
-    pretty_html = soup.prettify()
-    return etree.fromstring(pretty_html)
     
 def validate_xml_schema(xml_path, schema_path):
-    xml_file = lxml.etree.parse(xml_path)
+    # TODO: refactor into &#39;validate_parlaclarin&#39;
+    xml_file = etree.parse(xml_path)
 
-    schema = lxml.etree.XMLSchema(file=schema_path)
+    schema = etree.XMLSchema(file=schema_path)
     is_valid = schema.validate(xml_file)
 
     return is_valid
@@ -183,12 +123,7 @@ def paragraph_iterator(root, output=&#34;str&#34;):
                     p = &#34;\n&#34;.join(elem.itertext())
                     yield p
                 elif output == &#34;lxml&#34;:
-                    yield elem
-
-
-if __name__ == &#39;__main__&#39;:
-    validate_parla_clarin_example()
-    #update_test()</code></pre>
+                    yield elem</code></pre>
 </details>
 </section>
 <section>
@@ -233,44 +168,6 @@ if __name__ == &#39;__main__&#39;:
     # Finally, the hash is calculated via MD5
     digest = hashlib.md5(encoded_seed).hexdigest()
     return digest[:chars]</code></pre>
-</details>
-</dd>
-<dt id="pyparlaclarin.read.infer_metadata"><code class="name flex">
-<span>def <span class="ident">infer_metadata</span></span>(<span>filename)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def infer_metadata(filename):
-    metadata = dict()
-    filename = filename.replace(&#34;-&#34;, &#34;_&#34;)
-    metadata[&#34;protocol&#34;] = filename.split(&#34;/&#34;)[-1].split(&#34;.&#34;)[0]
-    split = filename.split(&#34;/&#34;)[-1].split(&#34;_&#34;)
-    
-    # Year
-    for s in split:
-        s = s[:4]
-        if s.isdigit():
-            year = int(s)
-            if year &gt; 1800 and year &lt; 2100:
-                metadata[&#34;year&#34;] = year
-
-    # Chamber
-    metadata[&#34;chamber&#34;] = &#34;Enkammarriksdagen&#34;
-    if &#34;_ak_&#34; in filename:
-        metadata[&#34;chamber&#34;] = &#34;Andra kammaren&#34;
-    elif &#34;_fk_&#34; in filename:
-        metadata[&#34;chamber&#34;] = &#34;Första kammaren&#34;
-    
-    try:
-        metadata[&#34;number&#34;] = int(split[-1])
-    except:
-        print(&#34;Number parsing unsuccesful&#34;, filename)
-        
-    return metadata</code></pre>
 </details>
 </dd>
 <dt id="pyparlaclarin.read.paragraph_iterator"><code class="name flex">
@@ -356,48 +253,6 @@ if __name__ == &#39;__main__&#39;:
     return &#34;\n\n&#34;.join(paragraphs)</code></pre>
 </details>
 </dd>
-<dt id="pyparlaclarin.read.read_html"><code class="name flex">
-<span>def <span class="ident">read_html</span></span>(<span>path)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Read a HTML file and turn it into valid XML</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def read_html(path):
-    &#34;&#34;&#34;
-    Read a HTML file and turn it into valid XML
-    &#34;&#34;&#34;
-    f = open(path)
-    soup = BeautifulSoup(f)
-    f.close()
-    pretty_html = soup.prettify()
-    return etree.fromstring(pretty_html)</code></pre>
-</details>
-</dd>
-<dt id="pyparlaclarin.read.read_riksdagen_xml"><code class="name flex">
-<span>def <span class="ident">read_riksdagen_xml</span></span>(<span>path)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Read Riksdagen XML text format and return a tuple
-consisting of an etree of , as well as the HTML
-inside the text element</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def read_riksdagen_xml(path):
-    &#34;&#34;&#34;
-    Read Riksdagen XML text format and return a tuple
-    consisting of an etree of , as well as the HTML
-    inside the text element
-    &#34;&#34;&#34;
-    # TODO: implement
-
-    xml, cleaned_html</code></pre>
-</details>
-</dd>
 <dt id="pyparlaclarin.read.speeches_with_name"><code class="name flex">
 <span>def <span class="ident">speeches_with_name</span></span>(<span>root, name=None)</span>
 </code></dt>
@@ -440,9 +295,10 @@ inside the text element</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def validate_xml_schema(xml_path, schema_path):
-    xml_file = lxml.etree.parse(xml_path)
+    # TODO: refactor into &#39;validate_parlaclarin&#39;
+    xml_file = etree.parse(xml_path)
 
-    schema = lxml.etree.XMLSchema(file=schema_path)
+    schema = etree.XMLSchema(file=schema_path)
     is_valid = schema.validate(xml_file)
 
     return is_valid</code></pre>
@@ -467,12 +323,9 @@ inside the text element</p></div>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="two-column">
 <li><code><a title="pyparlaclarin.read.element_hash" href="#pyparlaclarin.read.element_hash">element_hash</a></code></li>
-<li><code><a title="pyparlaclarin.read.infer_metadata" href="#pyparlaclarin.read.infer_metadata">infer_metadata</a></code></li>
 <li><code><a title="pyparlaclarin.read.paragraph_iterator" href="#pyparlaclarin.read.paragraph_iterator">paragraph_iterator</a></code></li>
 <li><code><a title="pyparlaclarin.read.parlaclarin_to_md" href="#pyparlaclarin.read.parlaclarin_to_md">parlaclarin_to_md</a></code></li>
 <li><code><a title="pyparlaclarin.read.parlaclarin_to_txt" href="#pyparlaclarin.read.parlaclarin_to_txt">parlaclarin_to_txt</a></code></li>
-<li><code><a title="pyparlaclarin.read.read_html" href="#pyparlaclarin.read.read_html">read_html</a></code></li>
-<li><code><a title="pyparlaclarin.read.read_riksdagen_xml" href="#pyparlaclarin.read.read_riksdagen_xml">read_riksdagen_xml</a></code></li>
 <li><code><a title="pyparlaclarin.read.speeches_with_name" href="#pyparlaclarin.read.speeches_with_name">speeches_with_name</a></code></li>
 <li><code><a title="pyparlaclarin.read.validate_xml_schema" href="#pyparlaclarin.read.validate_xml_schema">validate_xml_schema</a></code></li>
 </ul>

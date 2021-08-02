@@ -32,8 +32,7 @@
 Modify and curate Parla-Clarin documents
 &#34;&#34;&#34;
 from lxml import etree
-from pyparlaclarin.read import element_hash
-import re, random, datetime
+import random
 
 def _iter(root, ns=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
     for body in root.findall(&#34;.//&#34; + ns +&#34;body&#34;):
