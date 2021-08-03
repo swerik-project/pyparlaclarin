@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "pyparlaclarin"
-version = "0.0.1"
-description = ""
+version = "0.0.3"
+description = "Read, create, and modify Parla-Clarin XML files"
 authors = ["ninpnin <vainoyrjanainen@icloud.com>"]
 homepage = "https://welfare-state-analytics.github.io/pyparlaclarin/pyparlaclarin/"
 repository = "https://github.com/welfare-state-analytics/pyparlaclarin"
+readme = "README.md"
 license = "MIT"
 packages = [
     { include = "pyparlaclarin", from = "" }
