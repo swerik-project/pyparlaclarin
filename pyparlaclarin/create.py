@@ -1,8 +1,8 @@
 """
 Generate new Parla Clarin documents
 """
-import copy
-from lxml import etree
+import copy as _copy
+from lxml import etree as _etree
 
 # Generate parla clarin header
 def pc_header(metadata):
@@ -13,35 +13,35 @@ def pc_header(metadata):
         metadata: python dictionary with the appropriate metadata. Missing keys
             are allowed and filled with 'N/A' values.
     """
-    teiHeader = etree.Element("teiHeader")
+    teiHeader = _etree.Element("teiHeader")
     
     # fileDesc
-    fileDesc = etree.SubElement(teiHeader, "fileDesc")
+    fileDesc = _etree.SubElement(teiHeader, "fileDesc")
     
-    titleStmt = etree.SubElement(fileDesc, "titleStmt")
-    title = etree.SubElement(titleStmt, "title")
+    titleStmt = _etree.SubElement(fileDesc, "titleStmt")
+    title = _etree.SubElement(titleStmt, "title")
     title.text = metadata.get("document_title", "N/A")
     
     if "edition" in metadata:
-        editionStmt = etree.SubElement(fileDesc, "editionStmt")
-        edition = etree.SubElement(editionStmt, "edition")
+        editionStmt = _etree.SubElement(fileDesc, "editionStmt")
+        edition = _etree.SubElement(editionStmt, "edition")
         edition.text = metadata.get("edition", "N/A")
 
-    extent = etree.SubElement(fileDesc, "extent")
-    publicationStmt = etree.SubElement(fileDesc, "publicationStmt")
-    authority = etree.SubElement(publicationStmt, "authority")
+    extent = _etree.SubElement(fileDesc, "extent")
+    publicationStmt = _etree.SubElement(fileDesc, "publicationStmt")
+    authority = _etree.SubElement(publicationStmt, "authority")
     authority.text = metadata.get("authority", "N/A")
     
-    sourceDesc = etree.SubElement(fileDesc, "sourceDesc")
-    sourceBibl = etree.SubElement(sourceDesc, "bibl")
-    sourceTitle = etree.SubElement(sourceBibl, "title")
+    sourceDesc = _etree.SubElement(fileDesc, "sourceDesc")
+    sourceBibl = _etree.SubElement(sourceDesc, "bibl")
+    sourceTitle = _etree.SubElement(sourceBibl, "title")
     sourceTitle.text = metadata.get("document_title", "N/A")
     
     # encodingDesc
-    encodingDesc = etree.SubElement(teiHeader, "encodingDesc")
-    editorialDecl = etree.SubElement(encodingDesc, "editorialDecl")
-    correction = etree.SubElement(editorialDecl, "correction")
-    correction_p = etree.SubElement(correction, "p")
+    encodingDesc = _etree.SubElement(teiHeader, "encodingDesc")
+    editorialDecl = _etree.SubElement(encodingDesc, "editorialDecl")
+    correction = _etree.SubElement(editorialDecl, "correction")
+    correction_p = _etree.SubElement(correction, "p")
     correction_p.text = metadata.get("correction", "No correction of source texts was performed.")
     
     return teiHeader
@@ -51,14 +51,14 @@ def create_parlaclarin(teis, metadata):
         tei = teis
         return create_parlaclarin([tei], metadata)
     
-    teiCorpus = etree.Element("teiCorpus", xmlns="http://www.tei-c.org/ns/1.0")
+    teiCorpus = _etree.Element("teiCorpus", xmlns="http://www.tei-c.org/ns/1.0")
     teiHeader = pc_header(metadata)
     teiCorpus.append(teiHeader)
     
     for tei in teis:
         teiCorpus.append(tei)
     
-    teiCorpusTree = etree.ElementTree(teiCorpus)
+    teiCorpusTree = _etree.ElementTree(teiCorpus)
     
     for xml_element in teiCorpusTree.iter():
         content = xml_element.xpath('normalize-space()')
@@ -66,7 +66,7 @@ def create_parlaclarin(teis, metadata):
         if not content and len(xml_element.attrib) == 0:
             xml_element.getparent().remove(xml_element)
             
-    s = etree.tostring(teiCorpusTree, pretty_print=True, encoding="utf-8", xml_declaration=True).decode("utf-8")
+    s = _etree.tostring(teiCorpusTree, pretty_print=True, encoding="utf-8", xml_declaration=True).decode("utf-8")
     return s
     
 def create_tei(root, metadata):
@@ -77,34 +77,27 @@ def create_tei(root, metadata):
         txts: a list of lists of strings, corresponds to content blocks and paragraphs, respectively.
         metadata: Metadata of the parliamentary session
     """
-    metadata = copy.deepcopy(metadata)
+    metadata = _copy.deepcopy(metadata)
     
-    tei = etree.Element("TEI")
-    protocol_id = root.attrib["id"]
-    metadata["document_title"] = protocol_id.replace("_", " ").split("-")[0].replace("prot", "Protokoll")
+    tei = _etree.Element("TEI")
     documentHeader = pc_header(metadata)
     tei.append(documentHeader)
     
-    text = etree.SubElement(tei, "text")
-    front = etree.SubElement(text, "front")
-    preface = etree.SubElement(front, "div", type="preface")
-    etree.SubElement(preface, "head").text = protocol_id.split(".")[0]
+    text = _etree.SubElement(tei, "text")
+    front = _etree.SubElement(text, "front")
+    preface = _etree.SubElement(front, "div", type="preface")
+    _etree.SubElement(preface, "head").text = protocol_id.split(".")[0]
     if "date" not in metadata:
         year = metadata.get("year", 2020)
         metadata["date"] = str(year) + "-01-01"
         
-    etree.SubElement(preface, "docDate", when=metadata["date"]).text = metadata.get("date", "2020-01-01")
+    _etree.SubElement(preface, "docDate", when=metadata["date"]).text = metadata.get("date", "2020-01-01")
 
-    body = etree.SubElement(text, "body")
-    body_div = etree.SubElement(body, "div")
+    body = _etree.SubElement(text, "body")
+    body_div = _etree.SubElement(body, "div")
     
-    current_speaker = None
-    current_page = 0
-    u = None
-    prev_u = None
-
-    pb = etree.SubElement(body_div, "pb")
-    pb.attrib["n"] = str(current_page)
+    pb = _etree.SubElement(body_div, "pb")
+    pb.attrib["n"] = "0"
     
     return tei
 

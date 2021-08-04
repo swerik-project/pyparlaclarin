@@ -4,8 +4,8 @@
 Read and extract information from Parla-Clarin documents.
 """
 
-from lxml import etree
-import hashlib
+from lxml import etree as _etree
+import hashlib as _hashlib
 
 def element_hash(elem, protocol_id="", chars=16):
     """
@@ -31,14 +31,14 @@ def element_hash(elem, protocol_id="", chars=16):
     seed = protocol_id + "\n" + elem_text + "\n" + elem_tag + "\n" + elem_attrib
     encoded_seed = seed.encode("utf-8")
     # Finally, the hash is calculated via MD5
-    digest = hashlib.md5(encoded_seed).hexdigest()
+    digest = _hashlib.md5(encoded_seed).hexdigest()
     return digest[:chars]
     
 def validate_xml_schema(xml_path, schema_path):
     # TODO: refactor into 'validate_parlaclarin'
-    xml_file = etree.parse(xml_path)
+    xml_file = _etree.parse(xml_path)
 
-    schema = etree.XMLSchema(file=schema_path)
+    schema = _etree.XMLSchema(file=schema_path)
     is_valid = schema.validate(xml_file)
 
     return is_valid

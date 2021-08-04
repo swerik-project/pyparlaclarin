@@ -1,8 +1,8 @@
 """
 Modify and curate Parla-Clarin documents
 """
-from lxml import etree
-import random
+from lxml import etree as _etree
+import random as _random
 
 def _iter(root, ns="{http://www.tei-c.org/ns/1.0}"):
     for body in root.findall(".//" + ns +"body"):
@@ -25,7 +25,7 @@ def _iter(root, ns="{http://www.tei-c.org/ns/1.0}"):
 
 def random_classifier(paragraph):
     alternatives = ["note", "u"]
-    return random.choice(alternatives)
+    return _random.choice(alternatives)
 
 
 def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}"):
@@ -57,7 +57,7 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}"):
                     if prev_elem.tag == tei + "u":
                         prev_elem.append(seg)
                     else:
-                        new_elem = etree.Element(tei + "u")
+                        new_elem = _etree.Element(tei + "u")
                         prev_elem.addnext(new_elem)
                         prev_elem = new_elem
                         prev_elem.append(seg)
@@ -74,7 +74,7 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}"):
                         print("Change note to u")
                     else:
                         # Create new u node
-                        new_elem = etree.Element(tei + c)
+                        new_elem = _etree.Element(tei + c)
                         prev_elem.addnext(new_elem)
                         prev_elem = new_elem
 
