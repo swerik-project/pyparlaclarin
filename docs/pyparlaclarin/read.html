@@ -100,6 +100,7 @@ def speeches_with_name(root, name=None, return_ids=False):
     Args:
         root: Parla-Clarin document root, as an lxml tree root. 
         name: Name of the person whose speeches are returned. If name is None, returns all speeches.
+        return_ids: Return a generator of tuples (text, id) instead of only text. Default False.
     &#34;&#34;&#34;
     us = root.findall(&#39;.//{http://www.tei-c.org/ns/1.0}u&#39;)
     for u in us:
@@ -266,6 +267,8 @@ def paragraph_iterator(root, output=&#34;str&#34;):
 <dd>Parla-Clarin document root, as an lxml tree root. </dd>
 <dt><strong><code>name</code></strong></dt>
 <dd>Name of the person whose speeches are returned. If name is None, returns all speeches.</dd>
+<dt><strong><code>return_ids</code></strong></dt>
+<dd>Return a generator of tuples (text, id) instead of only text. Default False.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -278,6 +281,7 @@ def paragraph_iterator(root, output=&#34;str&#34;):
     Args:
         root: Parla-Clarin document root, as an lxml tree root. 
         name: Name of the person whose speeches are returned. If name is None, returns all speeches.
+        return_ids: Return a generator of tuples (text, id) instead of only text. Default False.
     &#34;&#34;&#34;
     us = root.findall(&#39;.//{http://www.tei-c.org/ns/1.0}u&#39;)
     for u in us:

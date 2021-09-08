@@ -70,6 +70,7 @@ def speeches_with_name(root, name=None, return_ids=False):
     Args:
         root: Parla-Clarin document root, as an lxml tree root. 
         name: Name of the person whose speeches are returned. If name is None, returns all speeches.
+        return_ids: Return a generator of tuples (text, id) instead of only text. Default False.
     """
     us = root.findall('.//{http://www.tei-c.org/ns/1.0}u')
     for u in us:
