@@ -34,8 +34,8 @@
 Read and extract information from Parla-Clarin documents.
 &#34;&#34;&#34;
 
-from lxml import etree
-import hashlib
+from lxml import etree as _etree
+import hashlib as _hashlib
 
 def element_hash(elem, protocol_id=&#34;&#34;, chars=16):
     &#34;&#34;&#34;
@@ -61,14 +61,14 @@ def element_hash(elem, protocol_id=&#34;&#34;, chars=16):
     seed = protocol_id + &#34;\n&#34; + elem_text + &#34;\n&#34; + elem_tag + &#34;\n&#34; + elem_attrib
     encoded_seed = seed.encode(&#34;utf-8&#34;)
     # Finally, the hash is calculated via MD5
-    digest = hashlib.md5(encoded_seed).hexdigest()
+    digest = _hashlib.md5(encoded_seed).hexdigest()
     return digest[:chars]
     
 def validate_xml_schema(xml_path, schema_path):
     # TODO: refactor into &#39;validate_parlaclarin&#39;
-    xml_file = etree.parse(xml_path)
+    xml_file = _etree.parse(xml_path)
 
-    schema = etree.XMLSchema(file=schema_path)
+    schema = _etree.XMLSchema(file=schema_path)
     is_valid = schema.validate(xml_file)
 
     return is_valid
@@ -93,7 +93,7 @@ def parlaclarin_to_txt(root):
     paragraphs = paragraph_iterator(root)
     return &#34;\n\n&#34;.join(paragraphs)
 
-def speeches_with_name(root, name=None):
+def speeches_with_name(root, name=None, return_ids=False):
     &#34;&#34;&#34;
     Convert Parla-Clarin XML to plain text. Returns a concatenated string.
     
@@ -103,10 +103,12 @@ def speeches_with_name(root, name=None):
     &#34;&#34;&#34;
     us = root.findall(&#39;.//{http://www.tei-c.org/ns/1.0}u&#39;)
     for u in us:
-        if name is None:
-            yield &#34;\n&#34;.join(u.itertext())
-        elif name.lower() in u.attrib[&#39;who&#39;].lower():
-            yield &#34;\n&#34;.join(u.itertext())
+        if name is None or name.lower() in u.attrib[&#39;who&#39;].lower():
+            content = &#34;\n&#34;.join(u.itertext())
+            if return_ids:
+                yield (content, u.attrib[&#39;{http://www.w3.org/XML/1998/namespace}id&#39;])
+            else:
+                yield content
 
 def paragraph_iterator(root, output=&#34;str&#34;):
     &#34;&#34;&#34;
@@ -166,7 +168,7 @@ def paragraph_iterator(root, output=&#34;str&#34;):
     seed = protocol_id + &#34;\n&#34; + elem_text + &#34;\n&#34; + elem_tag + &#34;\n&#34; + elem_attrib
     encoded_seed = seed.encode(&#34;utf-8&#34;)
     # Finally, the hash is calculated via MD5
-    digest = hashlib.md5(encoded_seed).hexdigest()
+    digest = _hashlib.md5(encoded_seed).hexdigest()
     return digest[:chars]</code></pre>
 </details>
 </dd>
@@ -254,7 +256,7 @@ def paragraph_iterator(root, output=&#34;str&#34;):
 </details>
 </dd>
 <dt id="pyparlaclarin.read.speeches_with_name"><code class="name flex">
-<span>def <span class="ident">speeches_with_name</span></span>(<span>root, name=None)</span>
+<span>def <span class="ident">speeches_with_name</span></span>(<span>root, name=None, return_ids=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Convert Parla-Clarin XML to plain text. Returns a concatenated string.</p>
@@ -269,7 +271,7 @@ def paragraph_iterator(root, output=&#34;str&#34;):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def speeches_with_name(root, name=None):
+<pre><code class="python">def speeches_with_name(root, name=None, return_ids=False):
     &#34;&#34;&#34;
     Convert Parla-Clarin XML to plain text. Returns a concatenated string.
     
@@ -279,10 +281,12 @@ def paragraph_iterator(root, output=&#34;str&#34;):
     &#34;&#34;&#34;
     us = root.findall(&#39;.//{http://www.tei-c.org/ns/1.0}u&#39;)
     for u in us:
-        if name is None:
-            yield &#34;\n&#34;.join(u.itertext())
-        elif name.lower() in u.attrib[&#39;who&#39;].lower():
-            yield &#34;\n&#34;.join(u.itertext())</code></pre>
+        if name is None or name.lower() in u.attrib[&#39;who&#39;].lower():
+            content = &#34;\n&#34;.join(u.itertext())
+            if return_ids:
+                yield (content, u.attrib[&#39;{http://www.w3.org/XML/1998/namespace}id&#39;])
+            else:
+                yield content</code></pre>
 </details>
 </dd>
 <dt id="pyparlaclarin.read.validate_xml_schema"><code class="name flex">
@@ -296,9 +300,9 @@ def paragraph_iterator(root, output=&#34;str&#34;):
 </summary>
 <pre><code class="python">def validate_xml_schema(xml_path, schema_path):
     # TODO: refactor into &#39;validate_parlaclarin&#39;
-    xml_file = etree.parse(xml_path)
+    xml_file = _etree.parse(xml_path)
 
-    schema = etree.XMLSchema(file=schema_path)
+    schema = _etree.XMLSchema(file=schema_path)
     is_valid = schema.validate(xml_file)
 
     return is_valid</code></pre>

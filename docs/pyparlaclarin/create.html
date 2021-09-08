@@ -31,8 +31,8 @@
 <pre><code class="python">&#34;&#34;&#34;
 Generate new Parla Clarin documents
 &#34;&#34;&#34;
-import copy
-from lxml import etree
+import copy as _copy
+from lxml import etree as _etree
 
 # Generate parla clarin header
 def pc_header(metadata):
@@ -43,35 +43,35 @@ def pc_header(metadata):
         metadata: python dictionary with the appropriate metadata. Missing keys
             are allowed and filled with &#39;N/A&#39; values.
     &#34;&#34;&#34;
-    teiHeader = etree.Element(&#34;teiHeader&#34;)
+    teiHeader = _etree.Element(&#34;teiHeader&#34;)
     
     # fileDesc
-    fileDesc = etree.SubElement(teiHeader, &#34;fileDesc&#34;)
+    fileDesc = _etree.SubElement(teiHeader, &#34;fileDesc&#34;)
     
-    titleStmt = etree.SubElement(fileDesc, &#34;titleStmt&#34;)
-    title = etree.SubElement(titleStmt, &#34;title&#34;)
+    titleStmt = _etree.SubElement(fileDesc, &#34;titleStmt&#34;)
+    title = _etree.SubElement(titleStmt, &#34;title&#34;)
     title.text = metadata.get(&#34;document_title&#34;, &#34;N/A&#34;)
     
     if &#34;edition&#34; in metadata:
-        editionStmt = etree.SubElement(fileDesc, &#34;editionStmt&#34;)
-        edition = etree.SubElement(editionStmt, &#34;edition&#34;)
+        editionStmt = _etree.SubElement(fileDesc, &#34;editionStmt&#34;)
+        edition = _etree.SubElement(editionStmt, &#34;edition&#34;)
         edition.text = metadata.get(&#34;edition&#34;, &#34;N/A&#34;)
 
-    extent = etree.SubElement(fileDesc, &#34;extent&#34;)
-    publicationStmt = etree.SubElement(fileDesc, &#34;publicationStmt&#34;)
-    authority = etree.SubElement(publicationStmt, &#34;authority&#34;)
+    extent = _etree.SubElement(fileDesc, &#34;extent&#34;)
+    publicationStmt = _etree.SubElement(fileDesc, &#34;publicationStmt&#34;)
+    authority = _etree.SubElement(publicationStmt, &#34;authority&#34;)
     authority.text = metadata.get(&#34;authority&#34;, &#34;N/A&#34;)
     
-    sourceDesc = etree.SubElement(fileDesc, &#34;sourceDesc&#34;)
-    sourceBibl = etree.SubElement(sourceDesc, &#34;bibl&#34;)
-    sourceTitle = etree.SubElement(sourceBibl, &#34;title&#34;)
+    sourceDesc = _etree.SubElement(fileDesc, &#34;sourceDesc&#34;)
+    sourceBibl = _etree.SubElement(sourceDesc, &#34;bibl&#34;)
+    sourceTitle = _etree.SubElement(sourceBibl, &#34;title&#34;)
     sourceTitle.text = metadata.get(&#34;document_title&#34;, &#34;N/A&#34;)
     
     # encodingDesc
-    encodingDesc = etree.SubElement(teiHeader, &#34;encodingDesc&#34;)
-    editorialDecl = etree.SubElement(encodingDesc, &#34;editorialDecl&#34;)
-    correction = etree.SubElement(editorialDecl, &#34;correction&#34;)
-    correction_p = etree.SubElement(correction, &#34;p&#34;)
+    encodingDesc = _etree.SubElement(teiHeader, &#34;encodingDesc&#34;)
+    editorialDecl = _etree.SubElement(encodingDesc, &#34;editorialDecl&#34;)
+    correction = _etree.SubElement(editorialDecl, &#34;correction&#34;)
+    correction_p = _etree.SubElement(correction, &#34;p&#34;)
     correction_p.text = metadata.get(&#34;correction&#34;, &#34;No correction of source texts was performed.&#34;)
     
     return teiHeader
@@ -81,14 +81,14 @@ def create_parlaclarin(teis, metadata):
         tei = teis
         return create_parlaclarin([tei], metadata)
     
-    teiCorpus = etree.Element(&#34;teiCorpus&#34;, xmlns=&#34;http://www.tei-c.org/ns/1.0&#34;)
+    teiCorpus = _etree.Element(&#34;teiCorpus&#34;, xmlns=&#34;http://www.tei-c.org/ns/1.0&#34;)
     teiHeader = pc_header(metadata)
     teiCorpus.append(teiHeader)
     
     for tei in teis:
         teiCorpus.append(tei)
     
-    teiCorpusTree = etree.ElementTree(teiCorpus)
+    teiCorpusTree = _etree.ElementTree(teiCorpus)
     
     for xml_element in teiCorpusTree.iter():
         content = xml_element.xpath(&#39;normalize-space()&#39;)
@@ -96,7 +96,7 @@ def create_parlaclarin(teis, metadata):
         if not content and len(xml_element.attrib) == 0:
             xml_element.getparent().remove(xml_element)
             
-    s = etree.tostring(teiCorpusTree, pretty_print=True, encoding=&#34;utf-8&#34;, xml_declaration=True).decode(&#34;utf-8&#34;)
+    s = _etree.tostring(teiCorpusTree, pretty_print=True, encoding=&#34;utf-8&#34;, xml_declaration=True).decode(&#34;utf-8&#34;)
     return s
     
 def create_tei(root, metadata):
@@ -107,34 +107,27 @@ def create_tei(root, metadata):
         txts: a list of lists of strings, corresponds to content blocks and paragraphs, respectively.
         metadata: Metadata of the parliamentary session
     &#34;&#34;&#34;
-    metadata = copy.deepcopy(metadata)
+    metadata = _copy.deepcopy(metadata)
     
-    tei = etree.Element(&#34;TEI&#34;)
-    protocol_id = root.attrib[&#34;id&#34;]
-    metadata[&#34;document_title&#34;] = protocol_id.replace(&#34;_&#34;, &#34; &#34;).split(&#34;-&#34;)[0].replace(&#34;prot&#34;, &#34;Protokoll&#34;)
+    tei = _etree.Element(&#34;TEI&#34;)
     documentHeader = pc_header(metadata)
     tei.append(documentHeader)
     
-    text = etree.SubElement(tei, &#34;text&#34;)
-    front = etree.SubElement(text, &#34;front&#34;)
-    preface = etree.SubElement(front, &#34;div&#34;, type=&#34;preface&#34;)
-    etree.SubElement(preface, &#34;head&#34;).text = protocol_id.split(&#34;.&#34;)[0]
+    text = _etree.SubElement(tei, &#34;text&#34;)
+    front = _etree.SubElement(text, &#34;front&#34;)
+    preface = _etree.SubElement(front, &#34;div&#34;, type=&#34;preface&#34;)
+    _etree.SubElement(preface, &#34;head&#34;).text = protocol_id.split(&#34;.&#34;)[0]
     if &#34;date&#34; not in metadata:
         year = metadata.get(&#34;year&#34;, 2020)
         metadata[&#34;date&#34;] = str(year) + &#34;-01-01&#34;
         
-    etree.SubElement(preface, &#34;docDate&#34;, when=metadata[&#34;date&#34;]).text = metadata.get(&#34;date&#34;, &#34;2020-01-01&#34;)
+    _etree.SubElement(preface, &#34;docDate&#34;, when=metadata[&#34;date&#34;]).text = metadata.get(&#34;date&#34;, &#34;2020-01-01&#34;)
 
-    body = etree.SubElement(text, &#34;body&#34;)
-    body_div = etree.SubElement(body, &#34;div&#34;)
+    body = _etree.SubElement(text, &#34;body&#34;)
+    body_div = _etree.SubElement(body, &#34;div&#34;)
     
-    current_speaker = None
-    current_page = 0
-    u = None
-    prev_u = None
-
-    pb = etree.SubElement(body_div, &#34;pb&#34;)
-    pb.attrib[&#34;n&#34;] = str(current_page)
+    pb = _etree.SubElement(body_div, &#34;pb&#34;)
+    pb.attrib[&#34;n&#34;] = &#34;0&#34;
     
     return tei</code></pre>
 </details>
@@ -160,14 +153,14 @@ def create_tei(root, metadata):
         tei = teis
         return create_parlaclarin([tei], metadata)
     
-    teiCorpus = etree.Element(&#34;teiCorpus&#34;, xmlns=&#34;http://www.tei-c.org/ns/1.0&#34;)
+    teiCorpus = _etree.Element(&#34;teiCorpus&#34;, xmlns=&#34;http://www.tei-c.org/ns/1.0&#34;)
     teiHeader = pc_header(metadata)
     teiCorpus.append(teiHeader)
     
     for tei in teis:
         teiCorpus.append(tei)
     
-    teiCorpusTree = etree.ElementTree(teiCorpus)
+    teiCorpusTree = _etree.ElementTree(teiCorpus)
     
     for xml_element in teiCorpusTree.iter():
         content = xml_element.xpath(&#39;normalize-space()&#39;)
@@ -175,7 +168,7 @@ def create_tei(root, metadata):
         if not content and len(xml_element.attrib) == 0:
             xml_element.getparent().remove(xml_element)
             
-    s = etree.tostring(teiCorpusTree, pretty_print=True, encoding=&#34;utf-8&#34;, xml_declaration=True).decode(&#34;utf-8&#34;)
+    s = _etree.tostring(teiCorpusTree, pretty_print=True, encoding=&#34;utf-8&#34;, xml_declaration=True).decode(&#34;utf-8&#34;)
     return s</code></pre>
 </details>
 </dd>
@@ -203,34 +196,27 @@ def create_tei(root, metadata):
         txts: a list of lists of strings, corresponds to content blocks and paragraphs, respectively.
         metadata: Metadata of the parliamentary session
     &#34;&#34;&#34;
-    metadata = copy.deepcopy(metadata)
+    metadata = _copy.deepcopy(metadata)
     
-    tei = etree.Element(&#34;TEI&#34;)
-    protocol_id = root.attrib[&#34;id&#34;]
-    metadata[&#34;document_title&#34;] = protocol_id.replace(&#34;_&#34;, &#34; &#34;).split(&#34;-&#34;)[0].replace(&#34;prot&#34;, &#34;Protokoll&#34;)
+    tei = _etree.Element(&#34;TEI&#34;)
     documentHeader = pc_header(metadata)
     tei.append(documentHeader)
     
-    text = etree.SubElement(tei, &#34;text&#34;)
-    front = etree.SubElement(text, &#34;front&#34;)
-    preface = etree.SubElement(front, &#34;div&#34;, type=&#34;preface&#34;)
-    etree.SubElement(preface, &#34;head&#34;).text = protocol_id.split(&#34;.&#34;)[0]
+    text = _etree.SubElement(tei, &#34;text&#34;)
+    front = _etree.SubElement(text, &#34;front&#34;)
+    preface = _etree.SubElement(front, &#34;div&#34;, type=&#34;preface&#34;)
+    _etree.SubElement(preface, &#34;head&#34;).text = protocol_id.split(&#34;.&#34;)[0]
     if &#34;date&#34; not in metadata:
         year = metadata.get(&#34;year&#34;, 2020)
         metadata[&#34;date&#34;] = str(year) + &#34;-01-01&#34;
         
-    etree.SubElement(preface, &#34;docDate&#34;, when=metadata[&#34;date&#34;]).text = metadata.get(&#34;date&#34;, &#34;2020-01-01&#34;)
+    _etree.SubElement(preface, &#34;docDate&#34;, when=metadata[&#34;date&#34;]).text = metadata.get(&#34;date&#34;, &#34;2020-01-01&#34;)
 
-    body = etree.SubElement(text, &#34;body&#34;)
-    body_div = etree.SubElement(body, &#34;div&#34;)
+    body = _etree.SubElement(text, &#34;body&#34;)
+    body_div = _etree.SubElement(body, &#34;div&#34;)
     
-    current_speaker = None
-    current_page = 0
-    u = None
-    prev_u = None
-
-    pb = etree.SubElement(body_div, &#34;pb&#34;)
-    pb.attrib[&#34;n&#34;] = str(current_page)
+    pb = _etree.SubElement(body_div, &#34;pb&#34;)
+    pb.attrib[&#34;n&#34;] = &#34;0&#34;
     
     return tei</code></pre>
 </details>
@@ -258,35 +244,35 @@ are allowed and filled with 'N/A' values.</dd>
         metadata: python dictionary with the appropriate metadata. Missing keys
             are allowed and filled with &#39;N/A&#39; values.
     &#34;&#34;&#34;
-    teiHeader = etree.Element(&#34;teiHeader&#34;)
+    teiHeader = _etree.Element(&#34;teiHeader&#34;)
     
     # fileDesc
-    fileDesc = etree.SubElement(teiHeader, &#34;fileDesc&#34;)
+    fileDesc = _etree.SubElement(teiHeader, &#34;fileDesc&#34;)
     
-    titleStmt = etree.SubElement(fileDesc, &#34;titleStmt&#34;)
-    title = etree.SubElement(titleStmt, &#34;title&#34;)
+    titleStmt = _etree.SubElement(fileDesc, &#34;titleStmt&#34;)
+    title = _etree.SubElement(titleStmt, &#34;title&#34;)
     title.text = metadata.get(&#34;document_title&#34;, &#34;N/A&#34;)
     
     if &#34;edition&#34; in metadata:
-        editionStmt = etree.SubElement(fileDesc, &#34;editionStmt&#34;)
-        edition = etree.SubElement(editionStmt, &#34;edition&#34;)
+        editionStmt = _etree.SubElement(fileDesc, &#34;editionStmt&#34;)
+        edition = _etree.SubElement(editionStmt, &#34;edition&#34;)
         edition.text = metadata.get(&#34;edition&#34;, &#34;N/A&#34;)
 
-    extent = etree.SubElement(fileDesc, &#34;extent&#34;)
-    publicationStmt = etree.SubElement(fileDesc, &#34;publicationStmt&#34;)
-    authority = etree.SubElement(publicationStmt, &#34;authority&#34;)
+    extent = _etree.SubElement(fileDesc, &#34;extent&#34;)
+    publicationStmt = _etree.SubElement(fileDesc, &#34;publicationStmt&#34;)
+    authority = _etree.SubElement(publicationStmt, &#34;authority&#34;)
     authority.text = metadata.get(&#34;authority&#34;, &#34;N/A&#34;)
     
-    sourceDesc = etree.SubElement(fileDesc, &#34;sourceDesc&#34;)
-    sourceBibl = etree.SubElement(sourceDesc, &#34;bibl&#34;)
-    sourceTitle = etree.SubElement(sourceBibl, &#34;title&#34;)
+    sourceDesc = _etree.SubElement(fileDesc, &#34;sourceDesc&#34;)
+    sourceBibl = _etree.SubElement(sourceDesc, &#34;bibl&#34;)
+    sourceTitle = _etree.SubElement(sourceBibl, &#34;title&#34;)
     sourceTitle.text = metadata.get(&#34;document_title&#34;, &#34;N/A&#34;)
     
     # encodingDesc
-    encodingDesc = etree.SubElement(teiHeader, &#34;encodingDesc&#34;)
-    editorialDecl = etree.SubElement(encodingDesc, &#34;editorialDecl&#34;)
-    correction = etree.SubElement(editorialDecl, &#34;correction&#34;)
-    correction_p = etree.SubElement(correction, &#34;p&#34;)
+    encodingDesc = _etree.SubElement(teiHeader, &#34;encodingDesc&#34;)
+    editorialDecl = _etree.SubElement(encodingDesc, &#34;editorialDecl&#34;)
+    correction = _etree.SubElement(editorialDecl, &#34;correction&#34;)
+    correction_p = _etree.SubElement(correction, &#34;p&#34;)
     correction_p.text = metadata.get(&#34;correction&#34;, &#34;No correction of source texts was performed.&#34;)
     
     return teiHeader</code></pre>

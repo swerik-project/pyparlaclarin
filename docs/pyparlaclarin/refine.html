@@ -31,8 +31,8 @@
 <pre><code class="python">&#34;&#34;&#34;
 Modify and curate Parla-Clarin documents
 &#34;&#34;&#34;
-from lxml import etree
-import random
+from lxml import etree as _etree
+import random as _random
 
 def _iter(root, ns=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
     for body in root.findall(&#34;.//&#34; + ns +&#34;body&#34;):
@@ -55,7 +55,7 @@ def _iter(root, ns=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
 
 def random_classifier(paragraph):
     alternatives = [&#34;note&#34;, &#34;u&#34;]
-    return random.choice(alternatives)
+    return _random.choice(alternatives)
 
 
 def reclassify(root, classifier, tei=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
@@ -87,7 +87,7 @@ def reclassify(root, classifier, tei=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
                     if prev_elem.tag == tei + &#34;u&#34;:
                         prev_elem.append(seg)
                     else:
-                        new_elem = etree.Element(tei + &#34;u&#34;)
+                        new_elem = _etree.Element(tei + &#34;u&#34;)
                         prev_elem.addnext(new_elem)
                         prev_elem = new_elem
                         prev_elem.append(seg)
@@ -104,7 +104,7 @@ def reclassify(root, classifier, tei=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
                         print(&#34;Change note to u&#34;)
                     else:
                         # Create new u node
-                        new_elem = etree.Element(tei + c)
+                        new_elem = _etree.Element(tei + c)
                         prev_elem.addnext(new_elem)
                         prev_elem = new_elem
 
@@ -281,7 +281,7 @@ def format_texts(root):
 </summary>
 <pre><code class="python">def random_classifier(paragraph):
     alternatives = [&#34;note&#34;, &#34;u&#34;]
-    return random.choice(alternatives)</code></pre>
+    return _random.choice(alternatives)</code></pre>
 </details>
 </dd>
 <dt id="pyparlaclarin.refine.reclassify"><code class="name flex">
@@ -333,7 +333,7 @@ as note or u.</dd>
                     if prev_elem.tag == tei + &#34;u&#34;:
                         prev_elem.append(seg)
                     else:
-                        new_elem = etree.Element(tei + &#34;u&#34;)
+                        new_elem = _etree.Element(tei + &#34;u&#34;)
                         prev_elem.addnext(new_elem)
                         prev_elem = new_elem
                         prev_elem.append(seg)
@@ -350,7 +350,7 @@ as note or u.</dd>
                         print(&#34;Change note to u&#34;)
                     else:
                         # Create new u node
-                        new_elem = etree.Element(tei + c)
+                        new_elem = _etree.Element(tei + c)
                         prev_elem.addnext(new_elem)
                         prev_elem = new_elem
 
