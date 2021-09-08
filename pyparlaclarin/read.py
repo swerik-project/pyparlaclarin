@@ -63,7 +63,7 @@ def parlaclarin_to_txt(root):
     paragraphs = paragraph_iterator(root)
     return "\n\n".join(paragraphs)
 
-def speeches_with_name(root, name=None):
+def speeches_with_name(root, name=None, return_ids=False):
     """
     Convert Parla-Clarin XML to plain text. Returns a concatenated string.
     
@@ -73,10 +73,12 @@ def speeches_with_name(root, name=None):
     """
     us = root.findall('.//{http://www.tei-c.org/ns/1.0}u')
     for u in us:
-        if name is None:
-            yield "\n".join(u.itertext())
-        elif name.lower() in u.attrib['who'].lower():
-            yield "\n".join(u.itertext())
+        if name is None or name.lower() in u.attrib['who'].lower():
+            content = "\n".join(u.itertext())
+            if return_ids:
+                yield (content, u.attrib['{http://www.w3.org/XML/1998/namespace}id'])
+            else:
+                yield content
 
 def paragraph_iterator(root, output="str"):
     """
