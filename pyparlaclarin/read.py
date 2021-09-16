@@ -6,6 +6,7 @@ Read and extract information from Parla-Clarin documents.
 
 from lxml import etree as _etree
 import hashlib as _hashlib
+import datetime as _datetime
 
 def element_hash(elem, protocol_id="", chars=16):
     """
@@ -97,3 +98,22 @@ def paragraph_iterator(root, output="str"):
                     yield p
                 elif output == "lxml":
                     yield elem
+
+def get_dates(root):
+    """
+    Get dates of a Parla-Clarin file. 
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root.
+    
+    returns:
+        as a datetime
+    """
+    dates = []
+    for docDate in root.findall(".//{http://www.tei-c.org/ns/1.0}docDate"):
+        date_string = docDate.text
+        datetime = _datetime.datetime.strptime(date_string, "%Y-%m-%d")
+        dates.append(datetime.date())
+
+    return dates
+            
