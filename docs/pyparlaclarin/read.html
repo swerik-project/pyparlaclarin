@@ -36,6 +36,7 @@ Read and extract information from Parla-Clarin documents.
 
 from lxml import etree as _etree
 import hashlib as _hashlib
+import datetime as _datetime
 
 def element_hash(elem, protocol_id=&#34;&#34;, chars=16):
     &#34;&#34;&#34;
@@ -126,7 +127,26 @@ def paragraph_iterator(root, output=&#34;str&#34;):
                     p = &#34;\n&#34;.join(elem.itertext())
                     yield p
                 elif output == &#34;lxml&#34;:
-                    yield elem</code></pre>
+                    yield elem
+
+def get_dates(root):
+    &#34;&#34;&#34;
+    Get dates of a Parla-Clarin file. 
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root.
+    
+    returns:
+        as a datetime
+    &#34;&#34;&#34;
+    dates = []
+    for docDate in root.findall(&#34;.//{http://www.tei-c.org/ns/1.0}docDate&#34;):
+        date_string = docDate.text
+        datetime = _datetime.datetime.strptime(date_string, &#34;%Y-%m-%d&#34;)
+        dates.append(datetime.date())
+
+    return dates
+            </code></pre>
 </details>
 </section>
 <section>
@@ -171,6 +191,41 @@ def paragraph_iterator(root, output=&#34;str&#34;):
     # Finally, the hash is calculated via MD5
     digest = _hashlib.md5(encoded_seed).hexdigest()
     return digest[:chars]</code></pre>
+</details>
+</dd>
+<dt id="pyparlaclarin.read.get_dates"><code class="name flex">
+<span>def <span class="ident">get_dates</span></span>(<span>root)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get dates of a Parla-Clarin file. </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>root</code></strong></dt>
+<dd>Parla-Clarin document root, as an lxml tree root.</dd>
+</dl>
+<p>returns:
+as a datetime</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_dates(root):
+    &#34;&#34;&#34;
+    Get dates of a Parla-Clarin file. 
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root.
+    
+    returns:
+        as a datetime
+    &#34;&#34;&#34;
+    dates = []
+    for docDate in root.findall(&#34;.//{http://www.tei-c.org/ns/1.0}docDate&#34;):
+        date_string = docDate.text
+        datetime = _datetime.datetime.strptime(date_string, &#34;%Y-%m-%d&#34;)
+        dates.append(datetime.date())
+
+    return dates</code></pre>
 </details>
 </dd>
 <dt id="pyparlaclarin.read.paragraph_iterator"><code class="name flex">
@@ -331,6 +386,7 @@ def paragraph_iterator(root, output=&#34;str&#34;):
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="two-column">
 <li><code><a title="pyparlaclarin.read.element_hash" href="#pyparlaclarin.read.element_hash">element_hash</a></code></li>
+<li><code><a title="pyparlaclarin.read.get_dates" href="#pyparlaclarin.read.get_dates">get_dates</a></code></li>
 <li><code><a title="pyparlaclarin.read.paragraph_iterator" href="#pyparlaclarin.read.paragraph_iterator">paragraph_iterator</a></code></li>
 <li><code><a title="pyparlaclarin.read.parlaclarin_to_md" href="#pyparlaclarin.read.parlaclarin_to_md">parlaclarin_to_md</a></code></li>
 <li><code><a title="pyparlaclarin.read.parlaclarin_to_txt" href="#pyparlaclarin.read.parlaclarin_to_txt">parlaclarin_to_txt</a></code></li>
