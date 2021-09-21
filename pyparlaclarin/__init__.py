@@ -1,5 +1,5 @@
 """
-A python package for accessing and processing the Swedish parliament data
+Read, create, and modify Parla-Clarin XML files
 
 
 """

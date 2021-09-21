@@ -1,11 +1,13 @@
 """
 Modify and curate Parla-Clarin documents
 """
-from lxml import etree as _etree
 import random as _random
 
+from lxml import etree as _etree
+
+
 def _iter(root, ns="{http://www.tei-c.org/ns/1.0}"):
-    for body in root.findall(".//" + ns +"body"):
+    for body in root.findall(".//" + ns + "body"):
         for div in body.findall(ns + "div"):
             for ix, elem in enumerate(div):
                 if elem.tag == ns + "u":
@@ -22,6 +24,7 @@ def _iter(root, ns="{http://www.tei-c.org/ns/1.0}"):
                 else:
                     print(elem.tag)
                     yield None
+
 
 def random_classifier(paragraph):
     alternatives = ["note", "u"]
@@ -67,7 +70,7 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}"):
         elif tag == "note":
             paragraph = elem.text
             c = classifier(paragraph)
-            if c != tag:                
+            if c != tag:
                 if c == "u":
                     elem.tag = tei + "seg"
                     if prev_elem.tag == tei + "u":
@@ -116,6 +119,7 @@ def format_paragraph(paragraph, spaces=12):
         return None
     return s
 
+
 def format_texts(root):
     """
     Formats all text elements in a Parla-Clarin document.
@@ -128,12 +132,15 @@ def format_texts(root):
         if type(elem.text) == str:
             elem.text = format_paragraph(elem.text)
         elif tag == "u":
-            if len(list(elem)) > 0:
+            if len("".join(elem.itertext())) == 0:
+                elem.getparent().remove(elem)
+            elif len(list(elem)) > 0:
                 for seg in elem:
                     if type(seg.text) == str:
                         seg.text = format_paragraph(seg.text, spaces=14)
                     else:
                         seg.text = None
+                        seg.getparent().remove(seg)
                 elem.text = None
             else:
                 elem.getparent().remove(elem)
@@ -142,5 +149,6 @@ def format_texts(root):
                 url = elem.attrib["{http://www.w3.org/XML/1998/namespace}url"]
                 del elem.attrib["{http://www.w3.org/XML/1998/namespace}url"]
                 elem.attrib["facs"] = url
+
 
     return root
