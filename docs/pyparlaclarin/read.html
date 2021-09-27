@@ -112,7 +112,7 @@ def speeches_with_name(root, name=None, return_ids=False):
             else:
                 yield content
 
-def paragraph_iterator(root, output=&#34;str&#34;):
+def paragraph_iterator(root, page=None, output=&#34;str&#34;):
     &#34;&#34;&#34;
     Convert Parla-Clarin XML to an iterator of paragraphs. 
 
@@ -120,14 +120,24 @@ def paragraph_iterator(root, output=&#34;str&#34;):
         root: Parla-Clarin document root, as an lxml tree root.
         output: Output format of paragraphs. Accepts &#34;str&#34; (default), or &#34;lxml&#34;.
     &#34;&#34;&#34;
+    tei_ns = &#34;{http://www.tei-c.org/ns/1.0}&#34;
+    if page is not None:
+        page = str(page)
+        correct_page = False
     for body in root.findall(&#34;.//{http://www.tei-c.org/ns/1.0}body&#34;):
         for div in body.findall(&#34;{http://www.tei-c.org/ns/1.0}div&#34;):
             for elem in div:
+                # Check if we enter the page the user requested
+                if page is not None:
+                    if elem.tag == tei_ns + &#34;pb&#34;:
+                        correct_page = elem.attrib.get(&#34;n&#34;) == page
                 if output == &#34;str&#34;:
                     p = &#34;\n&#34;.join(elem.itertext())
-                    yield p
+                    if page is None or correct_page:
+                        yield p
                 elif output == &#34;lxml&#34;:
-                    yield elem
+                    if page is None or correct_page:
+                        yield elem
 
 def get_dates(root):
     &#34;&#34;&#34;
@@ -229,7 +239,7 @@ as a datetime</p></div>
 </details>
 </dd>
 <dt id="pyparlaclarin.read.paragraph_iterator"><code class="name flex">
-<span>def <span class="ident">paragraph_iterator</span></span>(<span>root, output='str')</span>
+<span>def <span class="ident">paragraph_iterator</span></span>(<span>root, page=None, output='str')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Convert Parla-Clarin XML to an iterator of paragraphs. </p>
@@ -244,7 +254,7 @@ as a datetime</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def paragraph_iterator(root, output=&#34;str&#34;):
+<pre><code class="python">def paragraph_iterator(root, page=None, output=&#34;str&#34;):
     &#34;&#34;&#34;
     Convert Parla-Clarin XML to an iterator of paragraphs. 
 
@@ -252,14 +262,24 @@ as a datetime</p></div>
         root: Parla-Clarin document root, as an lxml tree root.
         output: Output format of paragraphs. Accepts &#34;str&#34; (default), or &#34;lxml&#34;.
     &#34;&#34;&#34;
+    tei_ns = &#34;{http://www.tei-c.org/ns/1.0}&#34;
+    if page is not None:
+        page = str(page)
+        correct_page = False
     for body in root.findall(&#34;.//{http://www.tei-c.org/ns/1.0}body&#34;):
         for div in body.findall(&#34;{http://www.tei-c.org/ns/1.0}div&#34;):
             for elem in div:
+                # Check if we enter the page the user requested
+                if page is not None:
+                    if elem.tag == tei_ns + &#34;pb&#34;:
+                        correct_page = elem.attrib.get(&#34;n&#34;) == page
                 if output == &#34;str&#34;:
                     p = &#34;\n&#34;.join(elem.itertext())
-                    yield p
+                    if page is None or correct_page:
+                        yield p
                 elif output == &#34;lxml&#34;:
-                    yield elem</code></pre>
+                    if page is None or correct_page:
+                        yield elem</code></pre>
 </details>
 </dd>
 <dt id="pyparlaclarin.read.parlaclarin_to_md"><code class="name flex">

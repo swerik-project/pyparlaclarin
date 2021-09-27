@@ -31,11 +31,13 @@
 <pre><code class="python">&#34;&#34;&#34;
 Modify and curate Parla-Clarin documents
 &#34;&#34;&#34;
-from lxml import etree as _etree
 import random as _random
 
+from lxml import etree as _etree
+
+
 def _iter(root, ns=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
-    for body in root.findall(&#34;.//&#34; + ns +&#34;body&#34;):
+    for body in root.findall(&#34;.//&#34; + ns + &#34;body&#34;):
         for div in body.findall(ns + &#34;div&#34;):
             for ix, elem in enumerate(div):
                 if elem.tag == ns + &#34;u&#34;:
@@ -52,6 +54,7 @@ def _iter(root, ns=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
                 else:
                     print(elem.tag)
                     yield None
+
 
 def random_classifier(paragraph):
     alternatives = [&#34;note&#34;, &#34;u&#34;]
@@ -97,7 +100,7 @@ def reclassify(root, classifier, tei=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
         elif tag == &#34;note&#34;:
             paragraph = elem.text
             c = classifier(paragraph)
-            if c != tag:                
+            if c != tag:
                 if c == &#34;u&#34;:
                     elem.tag = tei + &#34;seg&#34;
                     if prev_elem.tag == tei + &#34;u&#34;:
@@ -146,6 +149,7 @@ def format_paragraph(paragraph, spaces=12):
         return None
     return s
 
+
 def format_texts(root):
     &#34;&#34;&#34;
     Formats all text elements in a Parla-Clarin document.
@@ -158,12 +162,15 @@ def format_texts(root):
         if type(elem.text) == str:
             elem.text = format_paragraph(elem.text)
         elif tag == &#34;u&#34;:
-            if len(list(elem)) &gt; 0:
+            if len(&#34;&#34;.join(elem.itertext())) == 0:
+                elem.getparent().remove(elem)
+            elif len(list(elem)) &gt; 0:
                 for seg in elem:
                     if type(seg.text) == str:
                         seg.text = format_paragraph(seg.text, spaces=14)
                     else:
                         seg.text = None
+                        seg.getparent().remove(seg)
                 elem.text = None
             else:
                 elem.getparent().remove(elem)
@@ -172,6 +179,7 @@ def format_texts(root):
                 url = elem.attrib[&#34;{http://www.w3.org/XML/1998/namespace}url&#34;]
                 del elem.attrib[&#34;{http://www.w3.org/XML/1998/namespace}url&#34;]
                 elem.attrib[&#34;facs&#34;] = url
+
 
     return root</code></pre>
 </details>
@@ -252,12 +260,15 @@ def format_texts(root):
         if type(elem.text) == str:
             elem.text = format_paragraph(elem.text)
         elif tag == &#34;u&#34;:
-            if len(list(elem)) &gt; 0:
+            if len(&#34;&#34;.join(elem.itertext())) == 0:
+                elem.getparent().remove(elem)
+            elif len(list(elem)) &gt; 0:
                 for seg in elem:
                     if type(seg.text) == str:
                         seg.text = format_paragraph(seg.text, spaces=14)
                     else:
                         seg.text = None
+                        seg.getparent().remove(seg)
                 elem.text = None
             else:
                 elem.getparent().remove(elem)
@@ -266,6 +277,7 @@ def format_texts(root):
                 url = elem.attrib[&#34;{http://www.w3.org/XML/1998/namespace}url&#34;]
                 del elem.attrib[&#34;{http://www.w3.org/XML/1998/namespace}url&#34;]
                 elem.attrib[&#34;facs&#34;] = url
+
 
     return root</code></pre>
 </details>
@@ -343,7 +355,7 @@ as note or u.</dd>
         elif tag == &#34;note&#34;:
             paragraph = elem.text
             c = classifier(paragraph)
-            if c != tag:                
+            if c != tag:
                 if c == &#34;u&#34;:
                     elem.tag = tei + &#34;seg&#34;
                     if prev_elem.tag == tei + &#34;u&#34;:
