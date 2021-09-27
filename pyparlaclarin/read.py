@@ -82,7 +82,7 @@ def speeches_with_name(root, name=None, return_ids=False):
             else:
                 yield content
 
-def paragraph_iterator(root, output="str"):
+def paragraph_iterator(root, page=None, output="str"):
     """
     Convert Parla-Clarin XML to an iterator of paragraphs. 
 
@@ -90,14 +90,24 @@ def paragraph_iterator(root, output="str"):
         root: Parla-Clarin document root, as an lxml tree root.
         output: Output format of paragraphs. Accepts "str" (default), or "lxml".
     """
+    tei_ns = "{http://www.tei-c.org/ns/1.0}"
+    if page is not None:
+        page = str(page)
+        correct_page = False
     for body in root.findall(".//{http://www.tei-c.org/ns/1.0}body"):
         for div in body.findall("{http://www.tei-c.org/ns/1.0}div"):
             for elem in div:
+                # Check if we enter the page the user requested
+                if page is not None:
+                    if elem.tag == tei_ns + "pb":
+                        correct_page = elem.attrib.get("n") == page
                 if output == "str":
                     p = "\n".join(elem.itertext())
-                    yield p
+                    if page is None or correct_page:
+                        yield p
                 elif output == "lxml":
-                    yield elem
+                    if page is None or correct_page:
+                        yield elem
 
 def get_dates(root):
     """
