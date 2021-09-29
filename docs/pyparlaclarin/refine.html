@@ -159,27 +159,45 @@ def format_texts(root):
     &#34;&#34;&#34;
     for tag, elem in _iter(root):
 
-        if type(elem.text) == str:
-            elem.text = format_paragraph(elem.text)
+        # Format notes&#39; text content
+        # Remove notes with no text content
+        if tag == &#34;note&#34;:
+            if type(elem.text) == str:
+                elem.text = format_paragraph(elem.text)
+                if elem.text.strip() == &#34;&#34;:
+                    elem.text = None
+            else:
+                elem.text = None
+            if elem.text is None:
+                elem.getparent().remove(elem)
+
+        # Remove u&#39;s with no children
         elif tag == &#34;u&#34;:
             if len(&#34;&#34;.join(elem.itertext())) == 0:
                 elem.getparent().remove(elem)
             elif len(list(elem)) &gt; 0:
+                # Format segs&#39; text content
+                # Remove segs with no text content
                 for seg in elem:
                     if type(seg.text) == str:
                         seg.text = format_paragraph(seg.text, spaces=14)
+                        if seg.text.strip() == &#34;&#34;:
+                            seg.text = None
                     else:
                         seg.text = None
+                    if seg.text is None:
                         seg.getparent().remove(seg)
                 elem.text = None
             else:
                 elem.getparent().remove(elem)
+
+        # Use facs attribute instead of xml:url
         elif tag == &#34;pb&#34;:
             if &#34;{http://www.w3.org/XML/1998/namespace}url&#34; in elem.attrib:
                 url = elem.attrib[&#34;{http://www.w3.org/XML/1998/namespace}url&#34;]
                 del elem.attrib[&#34;{http://www.w3.org/XML/1998/namespace}url&#34;]
                 elem.attrib[&#34;facs&#34;] = url
-
+    
 
     return root</code></pre>
 </details>
@@ -257,27 +275,45 @@ def format_texts(root):
     &#34;&#34;&#34;
     for tag, elem in _iter(root):
 
-        if type(elem.text) == str:
-            elem.text = format_paragraph(elem.text)
+        # Format notes&#39; text content
+        # Remove notes with no text content
+        if tag == &#34;note&#34;:
+            if type(elem.text) == str:
+                elem.text = format_paragraph(elem.text)
+                if elem.text.strip() == &#34;&#34;:
+                    elem.text = None
+            else:
+                elem.text = None
+            if elem.text is None:
+                elem.getparent().remove(elem)
+
+        # Remove u&#39;s with no children
         elif tag == &#34;u&#34;:
             if len(&#34;&#34;.join(elem.itertext())) == 0:
                 elem.getparent().remove(elem)
             elif len(list(elem)) &gt; 0:
+                # Format segs&#39; text content
+                # Remove segs with no text content
                 for seg in elem:
                     if type(seg.text) == str:
                         seg.text = format_paragraph(seg.text, spaces=14)
+                        if seg.text.strip() == &#34;&#34;:
+                            seg.text = None
                     else:
                         seg.text = None
+                    if seg.text is None:
                         seg.getparent().remove(seg)
                 elem.text = None
             else:
                 elem.getparent().remove(elem)
+
+        # Use facs attribute instead of xml:url
         elif tag == &#34;pb&#34;:
             if &#34;{http://www.w3.org/XML/1998/namespace}url&#34; in elem.attrib:
                 url = elem.attrib[&#34;{http://www.w3.org/XML/1998/namespace}url&#34;]
                 del elem.attrib[&#34;{http://www.w3.org/XML/1998/namespace}url&#34;]
                 elem.attrib[&#34;facs&#34;] = url
-
+    
 
     return root</code></pre>
 </details>
