@@ -134,8 +134,6 @@ def format_texts(root):
         if tag == "note":
             if type(elem.text) == str:
                 elem.text = format_paragraph(elem.text)
-                if elem.text.strip() == "":
-                    elem.text = None
             else:
                 elem.text = None
             if elem.text is None:
@@ -151,8 +149,6 @@ def format_texts(root):
                 for seg in elem:
                     if type(seg.text) == str:
                         seg.text = format_paragraph(seg.text, spaces=14)
-                        if seg.text.strip() == "":
-                            seg.text = None
                     else:
                         seg.text = None
                     if seg.text is None:
