@@ -91,8 +91,10 @@ def speech_iterator(root):
         root: Parla-Clarin document root, as an lxml tree root.
     """
     us = root.findall('.//{http://www.tei-c.org/ns/1.0}u')
-    speech = []
+    if len(us) == 0: return None
     idx_old = us[0].attrib.get("who", "")
+    speech = []
+
     for u in us:
         for text in u.itertext():
             idx = u.attrib.get("who", "")
