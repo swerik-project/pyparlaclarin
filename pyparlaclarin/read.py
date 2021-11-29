@@ -82,6 +82,28 @@ def speeches_with_name(root, name=None, return_ids=False):
             else:
                 yield content
 
+def speech_iterator(root):
+    """
+    Convert Parla-Clarin XML to an iterator of of concatenated speeches and speaker ids.
+    Speech segments are concatenated unless a new speaker appears (ignoring any notes).
+
+    Args:
+        root: Parla-Clarin document root, as an lxml tree root.
+    """
+    us = root.findall('.//{http://www.tei-c.org/ns/1.0}u')
+    if len(us) == 0: return None
+    idx_old = us[0].attrib.get("who", "")
+    speech = []
+
+    for u in us:
+        for text in u.itertext():
+            idx = u.attrib.get("who", "")
+            if idx != idx_old:
+                yield([' '.join(speech), idx])
+                speech = []
+            speech.extend(text.split())
+            idx_old = idx
+
 def paragraph_iterator(root, page=None, output="str"):
     """
     Convert Parla-Clarin XML to an iterator of paragraphs. 
