@@ -31,7 +31,7 @@ def random_classifier(paragraph):
     return _random.choice(alternatives)
 
 
-def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}"):
+def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}", exclude=[]):
     """
     Reclassify nodes in a Parla-Clarin tree.
 
@@ -41,13 +41,14 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}"):
             takes paragraph content as input, outputs predicted xml tag, such
             as note or u.
         tei: namespace for the output xml
+        exclude: exclude certain tags or types of element from reclassification
     """
     prev_elem = None
     for ix, elem_tuple in enumerate(list(_iter(root))):
         tag, elem = elem_tuple
 
         prev_elem = elem
-        if tag == "u":
+        if tag == "u" and tag not in exclude:
             for seg in elem:
                 paragraph = seg.text
                 c = classifier(paragraph)
@@ -67,7 +68,7 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}"):
                 else:
                     pass
 
-        elif tag == "note":
+        elif tag == "note" and tag not in exclude and elem.attrib.get("type") not in exclude:
             paragraph = elem.text
             c = classifier(paragraph)
             if c != tag:

@@ -61,7 +61,7 @@ def random_classifier(paragraph):
     return _random.choice(alternatives)
 
 
-def reclassify(root, classifier, tei=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
+def reclassify(root, classifier, tei=&#34;{http://www.tei-c.org/ns/1.0}&#34;, exclude=[]):
     &#34;&#34;&#34;
     Reclassify nodes in a Parla-Clarin tree.
 
@@ -71,13 +71,14 @@ def reclassify(root, classifier, tei=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
             takes paragraph content as input, outputs predicted xml tag, such
             as note or u.
         tei: namespace for the output xml
+        exclude: exclude certain tags or types of element from reclassification
     &#34;&#34;&#34;
     prev_elem = None
     for ix, elem_tuple in enumerate(list(_iter(root))):
         tag, elem = elem_tuple
 
         prev_elem = elem
-        if tag == &#34;u&#34;:
+        if tag == &#34;u&#34; and tag not in exclude:
             for seg in elem:
                 paragraph = seg.text
                 c = classifier(paragraph)
@@ -97,7 +98,7 @@ def reclassify(root, classifier, tei=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
                 else:
                     pass
 
-        elif tag == &#34;note&#34;:
+        elif tag == &#34;note&#34; and tag not in exclude and elem.attrib.get(&#34;type&#34;) not in exclude:
             paragraph = elem.text
             c = classifier(paragraph)
             if c != tag:
@@ -325,7 +326,7 @@ def format_texts(root):
 </details>
 </dd>
 <dt id="pyparlaclarin.refine.reclassify"><code class="name flex">
-<span>def <span class="ident">reclassify</span></span>(<span>root, classifier, tei='{http://www.tei-c.org/ns/1.0}')</span>
+<span>def <span class="ident">reclassify</span></span>(<span>root, classifier, tei='{http://www.tei-c.org/ns/1.0}', exclude=[])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Reclassify nodes in a Parla-Clarin tree.</p>
@@ -339,12 +340,14 @@ takes paragraph content as input, outputs predicted xml tag, such
 as note or u.</dd>
 <dt><strong><code>tei</code></strong></dt>
 <dd>namespace for the output xml</dd>
+<dt><strong><code>exclude</code></strong></dt>
+<dd>exclude certain tags or types of element from reclassification</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def reclassify(root, classifier, tei=&#34;{http://www.tei-c.org/ns/1.0}&#34;):
+<pre><code class="python">def reclassify(root, classifier, tei=&#34;{http://www.tei-c.org/ns/1.0}&#34;, exclude=[]):
     &#34;&#34;&#34;
     Reclassify nodes in a Parla-Clarin tree.
 
@@ -354,13 +357,14 @@ as note or u.</dd>
             takes paragraph content as input, outputs predicted xml tag, such
             as note or u.
         tei: namespace for the output xml
+        exclude: exclude certain tags or types of element from reclassification
     &#34;&#34;&#34;
     prev_elem = None
     for ix, elem_tuple in enumerate(list(_iter(root))):
         tag, elem = elem_tuple
 
         prev_elem = elem
-        if tag == &#34;u&#34;:
+        if tag == &#34;u&#34; and tag not in exclude:
             for seg in elem:
                 paragraph = seg.text
                 c = classifier(paragraph)
@@ -380,7 +384,7 @@ as note or u.</dd>
                 else:
                     pass
 
-        elif tag == &#34;note&#34;:
+        elif tag == &#34;note&#34; and tag not in exclude and elem.attrib.get(&#34;type&#34;) not in exclude:
             paragraph = elem.text
             c = classifier(paragraph)
             if c != tag:
