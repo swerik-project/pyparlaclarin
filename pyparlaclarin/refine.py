@@ -37,8 +37,8 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}", exclude=[]
 
     Args:
         root: root of the lxml tree to be reclassified
-        classifier: lambda function that classifies paragraphs. str->str,
-            takes paragraph content as input, outputs predicted xml tag, such
+        classifier: lambda function that classifies paragraphs. lxml.elem->str,
+            takes paragraph as input, outputs predicted xml tag, such
             as note or u.
         tei: namespace for the output xml
         exclude: exclude certain tags or types of element from reclassification
@@ -50,8 +50,7 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}", exclude=[]
         prev_elem = elem
         if tag == "u" and tag not in exclude:
             for seg in elem:
-                paragraph = seg.text
-                c = classifier(paragraph)
+                c = classifier(seg)
                 if c != "u":
                     print("Change u to note")
                     prev_elem.addnext(seg)
@@ -69,8 +68,7 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}", exclude=[]
                     pass
 
         elif tag == "note" and tag not in exclude and elem.attrib.get("type") not in exclude:
-            paragraph = elem.text
-            c = classifier(paragraph)
+            c = classifier(elem)
             if c != tag:
                 if c == "u":
                     elem.tag = tei + "seg"
