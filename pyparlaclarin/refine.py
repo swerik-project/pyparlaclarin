@@ -119,7 +119,7 @@ def format_paragraph(paragraph, spaces=12):
     return s
 
 
-def format_texts(root):
+def format_texts(root, padding=12):
     """
     Formats all text elements in a Parla-Clarin document.
 
@@ -132,7 +132,7 @@ def format_texts(root):
         # Remove notes with no text content
         if tag == "note":
             if type(elem.text) == str:
-                elem.text = format_paragraph(elem.text)
+                elem.text = format_paragraph(elem.text, spaces=padding)
             else:
                 elem.text = None
             if elem.text is None:
@@ -147,7 +147,7 @@ def format_texts(root):
                 # Remove segs with no text content
                 for seg in elem:
                     if type(seg.text) == str:
-                        seg.text = format_paragraph(seg.text, spaces=14)
+                        seg.text = format_paragraph(seg.text, spaces=padding+2)
                     else:
                         seg.text = None
                     if seg.text is None:
