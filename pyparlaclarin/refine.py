@@ -4,7 +4,7 @@ Modify and curate Parla-Clarin documents
 import random as _random
 
 from lxml import etree as _etree
-
+import logging
 
 def _iter(root, ns="{http://www.tei-c.org/ns/1.0}"):
     for body in root.findall(".//" + ns + "body"):
@@ -22,7 +22,7 @@ def _iter(root, ns="{http://www.tei-c.org/ns/1.0}"):
                     elem.tag = ns + "u"
                     yield "u", elem
                 else:
-                    print(elem.tag)
+                    logging.warning(f"Unrecognized element {elem.tag}")
                     yield None
 
 
@@ -52,7 +52,7 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}", exclude=[]
             for seg in elem:
                 c = classifier(seg)
                 if c != "u":
-                    print("Change u to note")
+                    logging.info("Change u to note")
                     prev_elem.addnext(seg)
                     prev_elem = seg
                     seg.tag = tei + c
@@ -73,7 +73,7 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}", exclude=[]
                 if c == "u":
                     elem.tag = tei + "seg"
                     if prev_elem.tag == tei + "u":
-                        print("Change note to u")
+                        logging.info("Change note to u")
                     else:
                         # Create new u node
                         new_elem = _etree.Element(tei + c)
