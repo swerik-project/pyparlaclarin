@@ -92,7 +92,7 @@ def reclassify(root, classifier, tei="{http://www.tei-c.org/ns/1.0}", exclude=[]
     return root
 
 
-def format_paragraph(paragraph, spaces=12):
+def format_paragraph(paragraph, spaces=12, preserve_lines=False):
     """
     Formats paragraphs to be equal in width.
 
@@ -100,19 +100,25 @@ def format_paragraph(paragraph, spaces=12):
         paragraph: paragraph content, str.
         spaces: size of indentation as number of spaces.
     """
-    words = paragraph.replace("\n", "").strip().split()
     s = "\n" + " " * spaces
-    row = ""
+    if preserve_lines:
+        lines = [" ".join(line.split()) for line in paragraph.split("\n")]
+        for line in lines:
+            s += line.strip() + "\n" + " " * spaces
+            s += "\n" + " " * (spaces - 2)
+    else:
+        words = paragraph.replace("\n", "").strip().split()
+        row = ""
 
-    for word in words:
-        if len(row) > 60:
-            s += row.strip() + "\n" + " " * spaces
-            row = word
-        else:
-            row += " " + word
+        for word in words:
+            if len(row) > 60:
+                s += row.strip() + "\n" + " " * spaces
+                row = word
+            else:
+                row += " " + word
 
-    if len(row.strip()) > 0:
-        s += row.strip() + "\n" + " " * (spaces - 2)
+        if len(row.strip()) > 0:
+            s += row.strip() + "\n" + " " * (spaces - 2)
 
     if s.strip() == "":
         return None
