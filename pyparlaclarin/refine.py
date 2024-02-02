@@ -103,9 +103,12 @@ def format_paragraph(paragraph, spaces=12, preserve_lines=False):
     s = "\n" + " " * spaces
     if preserve_lines:
         lines = [" ".join(line.split()) for line in paragraph.split("\n")]
-        for line in lines:
+        for line in lines[:-1]:
             s += line.strip() + "\n" + " " * spaces
-            s += "\n" + " " * (spaces - 2)
+        
+        if len(lines) >= 1:
+            s += lines[-1]
+        s += "\n" + " " * (spaces - 2)
     else:
         words = paragraph.replace("\n", "").strip().split()
         row = ""
@@ -125,7 +128,7 @@ def format_paragraph(paragraph, spaces=12, preserve_lines=False):
     return s
 
 
-def format_texts(root, padding=12):
+def format_texts(root, padding=12, preserve_lines=False):
     """
     Formats all text elements in a Parla-Clarin document.
 
@@ -138,7 +141,7 @@ def format_texts(root, padding=12):
         # Remove notes with no text content
         if tag == "note":
             if type(elem.text) == str:
-                elem.text = format_paragraph(elem.text, spaces=padding)
+                elem.text = format_paragraph(elem.text, spaces=padding, preserve_lines=preserve_lines)
             else:
                 elem.text = None
             if elem.text is None:
@@ -153,7 +156,7 @@ def format_texts(root, padding=12):
                 # Remove segs with no text content
                 for seg in elem:
                     if type(seg.text) == str:
-                        seg.text = format_paragraph(seg.text, spaces=padding+2)
+                        seg.text = format_paragraph(seg.text, spaces=padding+2, preserve_lines=preserve_lines)
                     else:
                         seg.text = None
                     if seg.text is None:

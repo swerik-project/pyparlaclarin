@@ -31,11 +31,21 @@ def pc_header(metadata):
     publicationStmt = _etree.SubElement(fileDesc, "publicationStmt")
     authority = _etree.SubElement(publicationStmt, "authority")
     authority.text = metadata.get("authority", "N/A")
+    if "licence" in metadata:
+        availability = _etree.SubElement(publicationStmt, "availability")
+        licence = _etree.SubElement(availability, "licence")
+        licence.text = metadata["licence"]
+        if "licence_url" in metadata:
+            licence.attrib["target"] = metadata["licence_url"]
     
     sourceDesc = _etree.SubElement(fileDesc, "sourceDesc")
     sourceBibl = _etree.SubElement(sourceDesc, "bibl")
     sourceTitle = _etree.SubElement(sourceBibl, "title")
     sourceTitle.text = metadata.get("document_title", "N/A")
+    if "source_uri" in metadata:
+        sourceURI = _etree.SubElement(sourceBibl, "idno")
+        sourceURI.attrib["type"] = "URI"
+        sourceURI.text = metadata.get("source_uri", "N/A")
     
     # encodingDesc
     encodingDesc = _etree.SubElement(teiHeader, "encodingDesc")
