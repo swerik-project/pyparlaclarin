@@ -92,17 +92,19 @@ def speech_iterator(root):
     """
     us = root.findall('.//{http://www.tei-c.org/ns/1.0}u')
     if len(us) == 0: return None
-    idx_old = us[0].attrib.get("who", "")
-    speech = []
+    speaker_indices = [u.attrib["who"] for u in us] + [None]
+    us = us + [None]
 
-    for u in us:
-        for text in u.itertext():
-            idx = u.attrib.get("who", "")
-            if idx != idx_old:
-                yield([' '.join(speech), idx])
-                speech = []
-            speech.extend(text.split())
-            idx_old = idx
+    speaker = speaker_indices[0]
+    speech = []
+    for u, new_speaker in zip(us, speaker_indices):
+        if new_speaker != speaker:
+            yield ([' '.join(speech), speaker])
+            speaker = new_speaker
+            speech = []
+        if u is not None:
+            for text in u.itertext():
+                speech += text.split()
 
 def paragraph_iterator(root, page=None, output="str"):
     """
