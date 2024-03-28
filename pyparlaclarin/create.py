@@ -27,7 +27,7 @@ def pc_header(metadata):
         edition = _etree.SubElement(editionStmt, "edition")
         edition.text = metadata.get("edition", "N/A")
 
-    extent = _etree.SubElement(fileDesc, "extent")
+    #extent = _etree.SubElement(fileDesc, "extent")
     publicationStmt = _etree.SubElement(fileDesc, "publicationStmt")
     authority = _etree.SubElement(publicationStmt, "authority")
     authority.text = metadata.get("authority", "N/A")
