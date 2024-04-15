@@ -126,9 +126,11 @@ def paragraph_iterator(root, page=None, output="str"):
                     if elem.tag == tei_ns + "pb":
                         correct_page = elem.attrib.get("n") == page
                 if output == "str":
-                    p = "\n".join(elem.itertext())
                     if page is None or correct_page:
-                        yield p
+                        for p in elem.itertext():
+                            p_text = " ".join(p.split())
+                            if p_text != "":
+                                yield p_text
                 elif output == "lxml":
                     if page is None or correct_page:
                         yield elem
