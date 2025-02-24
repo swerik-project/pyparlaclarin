@@ -21,6 +21,11 @@ def _iter(root, ns="{http://www.tei-c.org/ns/1.0}"):
                 elif elem.tag == "u":
                     elem.tag = ns + "u"
                     yield "u", elem
+                elif elem.tag == "p":
+                    elem.tag = ns+"p"
+                    yield "p", elem
+                elem.tag == ns + "p":
+                    yield "p", elem
                 else:
                     logging.warning(f"Unrecognized element {elem.tag}")
                     yield None
