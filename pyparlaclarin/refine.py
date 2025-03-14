@@ -24,8 +24,13 @@ def _iter(root, ns="{http://www.tei-c.org/ns/1.0}"):
                 elif elem.tag == "p":
                     elem.tag = ns+"p"
                     yield "p", elem
-                elem.tag == ns + "p":
+                elif elem.tag == ns + "p":
                     yield "p", elem
+                elif elem.tag == "div":
+                    elem.tag = ns+"div"
+                    yield "div", elem
+                elif elem.tag == ns+"div":
+                    yield "div", elem
                 else:
                     logging.warning(f"Unrecognized element {elem.tag}")
                     yield None
@@ -140,11 +145,12 @@ def format_texts(root, padding=12, preserve_lines=False):
     Args:
         root: Parla-Clarin document as an lxml tree root.
     """
+    print(f"\n{root}\n")
     for tag, elem in _iter(root):
 
         # Format notes' text content
         # Remove notes with no text content
-        if tag == "note":
+        if tag in ["note", "p"]:
             if type(elem.text) == str:
                 elem.text = format_paragraph(elem.text, spaces=padding, preserve_lines=preserve_lines)
             else:
