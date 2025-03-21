@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: To cite this reposository, please use these metadata.
 title: "Pyparlaclarin"
-version: v1.8.0
+version: v0.9.2
 authors:
   - given-names: Väinö
     family-names: Yrjänäinen
@@ -10,7 +10,7 @@ authors:
     given-names: Robert
     orcid: "https://orcid.org/0000-0002-7647-4048"
     alias: BobBorges
-date-released: 2024-10-30
+date-released: 2025-03-21
 identifiers:
   - description: Repository basename
     type: other
