@@ -7,6 +7,12 @@ from lxml import etree as _etree
 import logging
 
 def _iter(root, ns="{http://www.tei-c.org/ns/1.0}"):
+    """
+    Iterate over body-level divs,
+    yeild namespace-free tag name and the sub-element if tags are in a known set of tags,
+    ("div", "p", "pb", "seg", "u")
+    else warn and return None
+    """
     for body in root.findall(".//" + ns + "body"):
         for div in body.findall(ns + "div"):
             for ix, elem in enumerate(div):
